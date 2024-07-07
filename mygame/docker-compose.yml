@@ -1,0 +1,20 @@
+version: '2.1'
+
+services:
+  app:
+    image: bora-game-java-app
+    networks:
+      - my-network
+    depends_on:
+      - mongodb
+    restart: on-failure
+    build: .
+  mongodb:
+    image: mongo:4.4.3
+    networks:
+      - my-network
+    ports:
+      - "27017:27017"
+networks:
+  my-network:
+    driver: bridge
