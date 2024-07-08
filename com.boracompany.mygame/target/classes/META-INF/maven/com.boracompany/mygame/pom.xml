@@ -26,16 +26,38 @@
 	</properties>
 
 	<dependencies>
+		<!--
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
 			<version>${mongo.driver.version}</version>
 		</dependency>
 		<dependency>
-			<!-- required to see Mongo Java Driver logs -->
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.3</version>
+			
+		</dependency>
+		-->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.32.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>5.6.4.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>javax.persistence-api</artifactId>
+			<version>2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>info.picocli</groupId>
@@ -88,6 +110,20 @@
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-junit</artifactId>
 			<version>${cucumber.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!--
+		https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.8.1</version> <!-- Adjust version as needed -->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.7.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -156,24 +192,26 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 		</plugins>
-		
+
 	</build>
 	<profiles>
-    <profile>
-      <id>docker</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
-            <version>0.44.0</version>
-            <configuration>
-              <!-- Docker custom networks mentioned in the run image configurations 
+		<profile>
+			<id>docker</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>0.44.0</version>
+						<configuration>
+							<!-- Docker custom networks mentioned in the run
+							image configurations 
                 will be created automatically during "start" and removed during "stop". -->
-              <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
-              <images>
+							<autoCreateCustomNetworks>true</autoCreateCustomNetworks>
+							<images>
+								<!-- 
                 <image>
                   <name>java-mongo-hello-java</name>
                   <build>
@@ -215,41 +253,42 @@
                     </wait>
                   </run>
                 </image>
-                <image>
-                  <alias>app</alias>
-                  <external>
-                    <type>compose</type>
-                    <basedir>${project.basedir}</basedir>
-                  </external>
-                  <run>
-                    <wait>
-                      <log>Hello World!</log>
-                      <time>10000</time>
-                    </wait>
-                  </run>
-                </image>
-              </images>
-            </configuration>
-            <executions>
-              <execution>
-                <id>docker-build-image</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>build</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>docker-verify</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>start</goal>
-                  <goal>stop</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+                -->
+								<image>
+									<alias>app</alias>
+									<external>
+										<type>compose</type>
+										<basedir>${project.basedir}</basedir>
+									</external>
+									<run>
+										<wait>
+											<log>Hello World!</log>
+											<time>10000</time>
+										</wait>
+									</run>
+								</image>
+							</images>
+						</configuration>
+						<executions>
+							<execution>
+								<id>docker-build-image</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>docker-verify</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>start</goal>
+									<goal>stop</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

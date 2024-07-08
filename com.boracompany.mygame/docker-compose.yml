@@ -1,4 +1,4 @@
-version: '2.1'
+version: '2.0'
 
 services:
   app:
@@ -6,15 +6,23 @@ services:
     networks:
       - my-network
     depends_on:
-      - mongodb
+      - postgresdb
     restart: on-failure
     build: .
-  mongodb:
-    image: mongo:4.4.3
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  postgresdb:
+    image: ubuntu/postgres:14-22.04_beta
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
     networks:
       - my-network
     ports:
-      - "27017:27017"
+      - "5432:5432"
 networks:
   my-network:
     driver: bridge
