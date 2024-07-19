@@ -1,4 +1,4 @@
-package com.boracompany.mygame;
+package com.boracompany.mygame.ORM;
 
 import java.net.URL;
 import java.util.List;
