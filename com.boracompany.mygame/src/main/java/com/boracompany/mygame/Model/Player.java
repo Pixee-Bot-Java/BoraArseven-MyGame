@@ -15,6 +15,26 @@ public class Player {
 	private Long id;
 
 	private String name;
+	
+	private float health;
+	
+	public float getHealth() {
+		return health;
+	}
+
+	public void setHealth(float health) {
+		this.health = health;
+	}
+
+	public float getDamage() {
+		return damage;
+	}
+
+	public void setDamage(float damage) {
+		this.damage = damage;
+	}
+
+	private float damage;
 
 	
 	// Getters and Setters
