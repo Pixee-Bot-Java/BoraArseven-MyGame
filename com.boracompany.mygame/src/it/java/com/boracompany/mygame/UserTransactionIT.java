@@ -1,7 +1,5 @@
 package com.boracompany.mygame;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -9,13 +7,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.boracompany.mygame.Model.Player;
 import com.boracompany.mygame.ORM.HibernateUtil;
-
-import org.testcontainers.containers.PostgreSQLContainer;
 
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
