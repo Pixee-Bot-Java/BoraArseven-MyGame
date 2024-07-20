@@ -13,8 +13,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<junit.version>4.13.2</junit.version>
 		<assertj.swing.version>3.17.1</assertj.swing.version>
 		<mockito.version>4.4.0</mockito.version>
@@ -23,7 +24,7 @@
 		<testcontainers.version>1.19.3</testcontainers.version>
 		<picocli.version>4.6.1</picocli.version>
 		<cucumber.version>5.5.0</cucumber.version>
-		<testcontainers.version>1.17.6</testcontainers.version>
+		<postresql.version>42.7.3</postresql.version>
 	</properties>
 
 	<dependencies>
@@ -44,7 +45,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.7.3</version>
+			<version>${postresql.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -55,11 +56,6 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>5.6.4.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>42.3.4</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.persistence</groupId>
@@ -108,6 +104,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>5.7.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>${testcontainers.version}</version>
@@ -134,12 +136,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<version>${testcontainers.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<version>5.7.0</version>
@@ -150,7 +146,6 @@
 			<artifactId>docker-compose-maven-plugin</artifactId>
 			<version>4.0.0</version>
 		</dependency>
-
 	</dependencies>
 	<build>
 
@@ -163,13 +158,11 @@
 				<executions>
 					<execution>
 						<id>add-test-source</id>
-
 						<phase>generate-test-sources</phase>
 						<goals>
 							<goal>add-test-source</goal>
 						</goals>
 						<configuration>
-
 							<sources>
 								<source>src/it/java</source>
 								<source>src/e2e/java</source>
@@ -209,7 +202,7 @@
 							<archive>
 								<manifest>
 									<mainClass>
-										com.boracompany.mygame.App</mainClass>
+										com.boracompany.mygame.Main</mainClass>
 								</manifest>
 							</archive>
 						</configuration>
@@ -229,10 +222,116 @@
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
 
+		</plugins>
+		<pluginManagement><!-- lock down plugins versions to avoid using Maven
+			defaults (may be moved to parent pom) -->
+			<plugins>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.22.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.8.12</version>
+					<configuration>
+						<excludes>
+							<exclude>**/Main/**</exclude>
+							<exclude>**/Model/**</exclude>
+						</excludes>
+					</configuration>
+					<executions>
+						<execution>
+							<id>default-prepare-agent</id>
+							<goals>
+								<goal>prepare-agent</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>default-report</id>
+							<goals>
+								<goal>report</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>jacoco-check</id>
+							<goals>
+								<goal>check</goal>
+							</goals>
+							<configuration>
+								<rules>
+									<rule>
+										<element>PACKAGE</element>
+										<limits>
+											<limit>
+												<counter>LINE</counter>
+												<value>COVEREDRATIO</value>
+												<minimum>0.00</minimum>
+											</limit>
+										</limits>
+									</rule>
+								</rules>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.eluder.coveralls</groupId>
+					<artifactId>coveralls-maven-plugin</artifactId>
+					<version>4.3.0</version>
+					<dependencies>
+						<!-- This is required when using JDK 9 or higher since
+						javax.xml.bind has been removed from the JDK -->
+						<dependency>
+							<groupId>javax.xml.bind</groupId>
+							<artifactId>jaxb-api</artifactId>
+							<version>2.3.1</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<profiles>
+		<profile>
+			<id>jacoco</id>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- configured in pluginManagement -->
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>coveralls</id>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- configured in pluginManagement -->
+						<!-- JaCoCo report is required by coveralls-maven-plugin -->
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<!-- configured in pluginManagement -->
+						<groupId>org.eluder.coveralls</groupId>
+						<artifactId>coveralls-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>docker</id>
 			<build>
@@ -279,9 +378,7 @@
 							</execution>
 						</executions>
 					</plugin>-->
-
 				</plugins>
-
 			</build>
 		</profile>
 	</profiles>
