@@ -18,6 +18,16 @@ public class Player {
 	
 	private float health;
 	
+	private boolean isalive;
+	
+	public boolean Isalive() {
+		return isalive;
+	}
+
+	public void setIsalive(boolean isalive) {
+		this.isalive = isalive;
+	}
+
 	public float getHealth() {
 		return health;
 	}
