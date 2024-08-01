@@ -6,7 +6,6 @@ public class GameController {
 
 
 	void attack (Player attacker, Player defender) {
-	
 		defender.setHealth(0);
 	}
 }
