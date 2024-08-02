@@ -18,43 +18,44 @@ import com.boracompany.mygame.ORM.HibernateUtil;
 import com.boracompany.mygame.ORM.PlayerDAOIMPL;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PlayerDAOImpIT {
 
-	// Normally I don't suppress warnings, but I think it there is a bug.
-	@SuppressWarnings("resource")
-	@Container
-	public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13.3")
-			.withDatabaseName("test").withUsername("test").withPassword("test");
+    @SuppressWarnings("resource")
+    @Container
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13.3")
+            .withDatabaseName("test").withUsername("test").withPassword("test");
 
-	private EntityManagerFactory emf;
-	private PlayerDAOIMPL playerDAO;
+    // this emf will also be given in DAOImplementation class.
+    private EntityManagerFactory emf;
+    private PlayerDAOIMPL playerDAO;
 
-	@BeforeAll
-	public void setUp() {
-		// Set system properties for HibernateUtil
-		System.setProperty("DB_URL", postgreSQLContainer.getJdbcUrl());
-		System.setProperty("DB_USERNAME", postgreSQLContainer.getUsername());
-		System.setProperty("DB_PASSWORD", postgreSQLContainer.getPassword());
+    @BeforeAll
+    public void setUp() {
+        // Set system properties for HibernateUtil
+        System.setProperty("DB_URL", postgreSQLContainer.getJdbcUrl());
+        System.setProperty("DB_USERNAME", postgreSQLContainer.getUsername());
+        System.setProperty("DB_PASSWORD", postgreSQLContainer.getPassword());
 
-		emf = HibernateUtil.getEntityManagerFactory();
-		playerDAO = new PlayerDAOIMPL(emf);
-	}
+        emf = HibernateUtil.getEntityManagerFactory();
+        playerDAO = new PlayerDAOIMPL(emf);
+    }
 
-	@AfterAll
-	public void tearDown() {
-		if (emf != null) {
-			emf.close();
-		}
-		if (postgreSQLContainer != null) {
-			postgreSQLContainer.stop();
-		}
-	}
+    @AfterAll
+    public void tearDown() {
+        if (emf != null) {
+            emf.close();
+        }
+        if (postgreSQLContainer != null) {
+            postgreSQLContainer.stop();
+        }
+    }
 
-	// player class does not need to be tested since the class is model class (no logic)
-	@Test
-    public void testgetAllPlayers() {
+    // no need to test for players with various stats, when em persists, it handles that. I only tested if I am able to use it. Thus, I don't want to test this 3rd party library.
+    @Test
+    public void testGetAllPlayers() {
         EntityManager em = emf.createEntityManager();
         
         // Create
@@ -83,4 +84,69 @@ public class PlayerDAOImpIT {
         assertTrue(found, "Player John Doe should be found in the list of all players.");
     }
 
+    @Test
+    public void testGetPlayer() {
+        EntityManager em = emf.createEntityManager();
+        
+        // Create
+        em.getTransaction().begin();
+        Player player = new Player();
+        player.setName("Jane Doe");
+        em.persist(player);
+        em.getTransaction().commit();
+        em.close();
+        
+        // Retrieve
+        Player retrievedPlayer = playerDAO.getPlayer(player.getId());
+        
+        // Assert
+        assertNotNull(retrievedPlayer);
+        assertEquals("Jane Doe", retrievedPlayer.getName());
+    }
+
+    @Test
+    public void testUpdatePlayer() {
+        EntityManager em = emf.createEntityManager();
+        
+        // Create
+        em.getTransaction().begin();
+        Player player = new Player();
+        player.setName("Initial Name");
+        em.persist(player);
+        em.getTransaction().commit();
+        em.close();
+        
+        // Update
+        player.setName("Updated Name");
+        playerDAO.updatePlayer(player);
+        
+        // Retrieve
+        Player updatedPlayer = playerDAO.getPlayer(player.getId());
+        
+        // Assert
+        assertNotNull(updatedPlayer);
+        assertEquals("Updated Name", updatedPlayer.getName());
+    }
+
+    @Test
+    public void testDeletePlayer() {
+        EntityManager em = emf.createEntityManager();
+        
+        // Create
+        em.getTransaction().begin();
+        Player player = new Player();
+        player.setName("To Be Deleted");
+        em.persist(player);
+        em.getTransaction().commit();
+        em.close();
+        
+        // Delete
+        playerDAO.deletePlayer(player);
+        
+        // Retrieve
+        Player deletedPlayer = playerDAO.getPlayer(player.getId());
+        
+        // Assert
+        assertNull(deletedPlayer);
+    }
 }

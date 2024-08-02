@@ -31,7 +31,7 @@ public class PlayerDAOIMPL implements PlayerDAO {
     }
 
     @Override
-    public Player getPlayer(int ID) {
+    public Player getPlayer(Long ID) {
         EntityManager em = emf.createEntityManager();
         Player player = null;
         try {
