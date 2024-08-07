@@ -25,6 +25,8 @@
 		<picocli.version>4.6.1</picocli.version>
 		<cucumber.version>5.5.0</cucumber.version>
 		<postresql.version>42.7.3</postresql.version>
+  <sonar.organization>boraarseven</sonar.organization>
+  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
 	<dependencies>
@@ -39,7 +41,6 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.3</version>
-
 		</dependency>
 
 		<dependency>
@@ -228,6 +229,40 @@
 			defaults (may be moved to parent pom) -->
 			<plugins>
 				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.9.1.2184</version>
+				</plugin>
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<version>1.7.0</version>
+					<configuration>
+						<targetClasses>
+							<param>com.boracompany.mygame.*</param>
+						</targetClasses>
+						<targetTests>
+							<param>com.boracompany.mygame.*</param>
+						</targetTests>
+						<mutators>
+							<mutator>DEFAULTS</mutator>
+						</mutators>
+						<mutationThreshold>50</mutationThreshold>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>mutationCoverage</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.0</version>
+				</plugin>
+				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.22.1</version>
 				</plugin>
@@ -239,6 +274,7 @@
 						<excludes>
 							<exclude>**/Main/**</exclude>
 							<exclude>**/Model/**</exclude>
+							<exclude>**/Hibernate*</exclude>
 						</excludes>
 					</configuration>
 					<executions>
@@ -267,7 +303,7 @@
 											<limit>
 												<counter>LINE</counter>
 												<value>COVEREDRATIO</value>
-												<minimum>0.75</minimum>
+												<minimum>0.95</minimum>
 											</limit>
 										</limits>
 									</rule>
