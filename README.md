@@ -10,3 +10,4 @@ SonarCloud Technical Debt: [![Technical Debt](https://sonarcloud.io/api/project_
 SonarCloud Maintainability Rating: [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)
 SonarCloud Vulnerabilities: [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)
 SonarCloud Security Rating: [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)
+SonarCloud Reliability Rating: [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)
