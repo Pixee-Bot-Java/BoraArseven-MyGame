@@ -1,7 +1,7 @@
 
 Coveralls: [![Coverage Status](https://coveralls.io/repos/github/BoraArseven/MyGame/badge.svg?branch=main)](https://coveralls.io/github/BoraArseven/MyGame?branch=main)
 SonarCloud Coverage: [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=coverage)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)
-Workflow: [![Java 17 CI with Maven](https://github.com/BoraArseven/MyGame/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/BoraArseven/MyGame/actions/workflows/maven.yml)
+Workflow Status Badge: [![Java 17 CI with Maven](https://github.com/BoraArseven/MyGame/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/BoraArseven/MyGame/actions/workflows/maven.yml)
 SonarCloud Quality:[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)
 SonarCloud Bugs:[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=bugs)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)
 SonarCloud Code Smells: [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)
