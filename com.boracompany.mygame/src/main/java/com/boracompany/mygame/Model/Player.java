@@ -18,6 +18,16 @@ public class Player {
 	
 	private float health;
 	
+	private boolean isalive;
+	
+	public boolean Isalive() {
+		return isalive;
+	}
+
+	public void setIsalive(boolean isalive) {
+		this.isalive = isalive;
+	}
+
 	public float getHealth() {
 		return health;
 	}
@@ -37,7 +47,7 @@ public class Player {
 	private float damage;
 
 	
-	// Getters and Setters
+	// Getters and Settersplayer
 	public Long getId() {
 		return id;
 	}
