@@ -55,6 +55,7 @@ public class PlayerDAOIMPL implements PlayerDAO {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
+            e.printStackTrace();
             throw e;
         } finally {
             em.close();
@@ -77,6 +78,7 @@ public class PlayerDAOIMPL implements PlayerDAO {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
+            e.printStackTrace();
             throw e;
         } finally {
             em.close();
