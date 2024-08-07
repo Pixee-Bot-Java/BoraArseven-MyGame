@@ -26,6 +26,11 @@
 			<type>2</type>
 			<location>/home/boraarseven/git/GameRepo/.github</location>
 		</link>
+		<link>
+			<name>README.md</name>
+			<type>1</type>
+			<location>/home/boraarseven/git/GameRepo/README.md</location>
+		</link>
 	</linkedResources>
 	<variableList>
 		<variable>
