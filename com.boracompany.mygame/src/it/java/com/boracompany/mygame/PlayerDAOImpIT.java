@@ -64,14 +64,12 @@ public class PlayerDAOImpIT {
 		em.persist(player);
 		em.getTransaction().commit();
 		em.close();
-
 		List<Player> players = playerDAO.getAllPlayers();
-
 		assertNotNull(players);
 		assertFalse(players.isEmpty());
 
 		boolean found = false;
-			
+
 		for (Player p : players) {
 			if (p.getName().equals("John Doe")) {
 				found = true;
@@ -85,16 +83,13 @@ public class PlayerDAOImpIT {
 	@Test
 	public void testGetPlayer() {
 		EntityManager em = emf.createEntityManager();
-
 		em.getTransaction().begin();
 		Player player = new PlayerBuilder().withName("Jane Doe").build();
 		player.setName("Jane Doe");
 		em.persist(player);
 		em.getTransaction().commit();
 		em.close();
-
 		Player retrievedPlayer = playerDAO.getPlayer(player.getId());
-
 		assertNotNull(retrievedPlayer);
 		assertEquals("Jane Doe", retrievedPlayer.getName());
 	}
@@ -111,7 +106,6 @@ public class PlayerDAOImpIT {
 		player.setName("Updated Name");
 		playerDAO.updatePlayer(player);
 		Player updatedPlayer = playerDAO.getPlayer(player.getId());
-
 		assertNotNull(updatedPlayer);
 		assertEquals("Updated Name", updatedPlayer.getName());
 	}
@@ -119,18 +113,14 @@ public class PlayerDAOImpIT {
 	@Test
 	public void testDeletePlayer() {
 		EntityManager em = emf.createEntityManager();
-
 		em.getTransaction().begin();
 		Player player = new Player();
 		player.setName("To Be Deleted");
 		em.persist(player);
 		em.getTransaction().commit();
 		em.close();
-
 		playerDAO.deletePlayer(player);
-
 		Player deletedPlayer = playerDAO.getPlayer(player.getId());
-
 		assertNull(deletedPlayer);
 	}
 
