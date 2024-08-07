@@ -24,7 +24,7 @@
 		<link>
 			<name>.github</name>
 			<type>2</type>
-			<locationURI>copy_PARENT/.github</locationURI>
+			<location>/home/boraarseven/git/GameRepo/.github</location>
 		</link>
 	</linkedResources>
 	<variableList>
