@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "app_player") // Note the double quotes around User
 public class Player {
-// I did not use builder pattern here to focus course content.
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -47,7 +47,7 @@ public class Player {
 	private float damage;
 
 	
-	// Getters and Setters
+	// Getters and Settersplayer
 	public Long getId() {
 		return id;
 	}
