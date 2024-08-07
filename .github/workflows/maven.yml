@@ -11,9 +11,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-	strategy:
+    strategy:
       matrix:
-		additional-maven-args: "-Pjacoco -DrepoToken=$COVERALLS_REPO_TOKEN coveralls:report"
+        additional-maven-args: "-Pjacoco -DrepoToken=$COVERALLS_REPO_TOKEN coveralls:report"
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
@@ -21,7 +21,6 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: 17
-
     - name: Cache local Maven repository
       uses: actions/cache@v4
       with:
@@ -32,4 +31,3 @@ jobs:
     - name: Build with Maven
       run: mvn clean verify ${{ matrix.additional-maven-args }}
       working-directory: com.boracompany.mygame
-	  
