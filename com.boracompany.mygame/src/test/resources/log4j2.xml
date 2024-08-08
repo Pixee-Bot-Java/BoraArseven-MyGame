@@ -7,8 +7,8 @@ pattern="%d [%t] %-5level %logger{36} - %msg%n%throwable" />
 </Console>
 </Appenders>
 <Loggers>
-<Root level="INFO">
+<Root level="DEBUG">
 <AppenderRef ref="ConsoleAppender" />
 </Root>
-</Loggers>
+</Loggers>>
 </Configuration>
