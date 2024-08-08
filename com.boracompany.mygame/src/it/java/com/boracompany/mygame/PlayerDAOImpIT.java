@@ -1,32 +1,35 @@
 package com.boracompany.mygame;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.List;
 
 import com.boracompany.mygame.Model.Player;
 import com.boracompany.mygame.Model.PlayerBuilder;
 import com.boracompany.mygame.ORM.HibernateUtil;
 import com.boracompany.mygame.ORM.PlayerDAOIMPL;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PlayerDAOImpIT {
 
-	@SuppressWarnings("resource")
+	
 	@Container
 	public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13.3")
 			.withDatabaseName("test").withUsername("test").withPassword("test");
@@ -52,6 +55,7 @@ public class PlayerDAOImpIT {
 		if (postgreSQLContainer != null) {
 			postgreSQLContainer.stop();
 		}
+
 	}
 
 	@Test
