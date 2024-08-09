@@ -13,7 +13,15 @@ public class PlayerDAOIMPL implements PlayerDAO {
 
     private EntityManagerFactory emf;
 
-    public PlayerDAOIMPL(EntityManagerFactory emf) {
+    public EntityManagerFactory getEmf() {
+		return emf;
+	}
+
+	public void setEmf(EntityManagerFactory emf) {
+		this.emf = emf;
+	}
+
+	public PlayerDAOIMPL(EntityManagerFactory emf) {
         this.emf = emf;
     }
 
@@ -47,15 +55,22 @@ public class PlayerDAOIMPL implements PlayerDAO {
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = null;
         try {
+        	
             transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(player);
-            transaction.commit();
+            if((transaction != null)) {
+            	 transaction.begin();
+                 em.merge(player);
+                 transaction.commit();
+            }
+            // Handled NullpointerException thanks to jacoco's guidance.
+            else {
+            	 throw new IllegalStateException("Transaction is null");
+            }
+           
         } catch (RuntimeException e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-            e.printStackTrace();
             throw e;
         } finally {
             em.close();
