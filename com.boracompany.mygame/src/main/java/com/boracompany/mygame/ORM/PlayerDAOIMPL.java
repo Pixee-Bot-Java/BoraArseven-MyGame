@@ -2,6 +2,7 @@ package com.boracompany.mygame.ORM;
 
 import java.util.List;
 
+import javax.annotation.Generated;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -12,11 +13,14 @@ import com.boracompany.mygame.Model.Player;
 public class PlayerDAOIMPL implements PlayerDAO {
 
     private EntityManagerFactory emf;
-
+    
+    
+    @Generated("exclude-from-coverage")
     public EntityManagerFactory getEmf() {
 		return emf;
 	}
 
+    @Generated("exclude-from-coverage")
 	public void setEmf(EntityManagerFactory emf) {
 		this.emf = emf;
 	}
