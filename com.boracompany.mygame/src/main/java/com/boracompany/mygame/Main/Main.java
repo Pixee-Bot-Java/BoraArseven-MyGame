@@ -9,9 +9,8 @@ public class Main {
 	// this will activate view in future
 	public static void main(String[] args) {
 		LOGGER.info("App started");
-
 		System.out.println("Hello World!");
-		LOGGER.info("App Started");
+		LOGGER.info("App Terminated");
 	}
 	
 }
