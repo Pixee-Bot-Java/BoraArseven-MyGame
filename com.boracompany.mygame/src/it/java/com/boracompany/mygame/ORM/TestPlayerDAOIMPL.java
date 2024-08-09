@@ -32,4 +32,31 @@ public class TestPlayerDAOIMPL extends PlayerDAOIMPL {
             em.close();
         }
     }
+    @Override
+    public void deletePlayer(Player player) {
+        EntityManager em = getEmf().createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = em.getTransaction();
+            transaction.begin();
+
+            Player managedPlayer = em.find(Player.class, player.getId());
+            
+            if (managedPlayer != null) {
+                if ("Should Rollback".equals(managedPlayer.getName())) {
+                    throw new RuntimeException("Simulated Exception");
+                }
+                em.remove(managedPlayer);
+            }
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }
