@@ -19,7 +19,7 @@ public class TestPlayerDAOIMPL extends PlayerDAOIMPL {
         try {
             transaction.begin();
             if ("Should Rollback".equals(player.getName())) {
-                throw new RuntimeException("Simulated Exception");
+                throw new RuntimeException("Failed to update player due to an unexpected error.");
             }
             em.merge(player);
             transaction.commit();
@@ -44,7 +44,7 @@ public class TestPlayerDAOIMPL extends PlayerDAOIMPL {
             
             if (managedPlayer != null) {
                 if ("Should Rollback".equals(managedPlayer.getName())) {
-                    throw new RuntimeException("Simulated Exception");
+                    throw new RuntimeException("Failed to update player due to an unexpected error.");
                 }
                 em.remove(managedPlayer);
             }
