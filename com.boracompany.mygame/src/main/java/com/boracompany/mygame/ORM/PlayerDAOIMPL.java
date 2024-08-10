@@ -77,7 +77,7 @@ public class PlayerDAOIMPL implements PlayerDAO {
 			if (transaction != null && transaction.isActive()) {
 				transaction.rollback();
 			}
-			e.printStackTrace();
+			 LOGGER.error("An error occurred while trying to update player with ID {}: {}", player.getId(), e.getMessage(), e);
 			throw e;
 		}
 
@@ -109,7 +109,7 @@ public class PlayerDAOIMPL implements PlayerDAO {
 			if (transaction != null && transaction.isActive()) {
 				transaction.rollback();
 			}
-			e.printStackTrace();
+			 LOGGER.error("An error occurred while trying to delete player with ID {}: {}", player.getId(), e.getMessage(), e);
 			throw e;
 		} finally {
 			em.close();
