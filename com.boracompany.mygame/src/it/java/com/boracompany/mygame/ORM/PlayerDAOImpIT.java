@@ -12,7 +12,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.transaction.Transaction;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -38,7 +37,7 @@ public class PlayerDAOImpIT {
 	private PlayerDAOIMPL playerDAO;
 
 	@BeforeAll
-	public void setUp() {
+	 void setUp() {
 		System.setProperty("DB_URL", postgreSQLContainer.getJdbcUrl());
 		System.setProperty("DB_USERNAME", postgreSQLContainer.getUsername());
 		System.setProperty("DB_PASSWORD", postgreSQLContainer.getPassword());
@@ -48,7 +47,7 @@ public class PlayerDAOImpIT {
 	}
 
 	@AfterAll
-	public void tearDown() {
+	 void tearDown() {
 		if (emf != null) {
 			emf.close();
 		}
@@ -59,7 +58,7 @@ public class PlayerDAOImpIT {
 	}
 
 	@Test
-	public void testGetAllPlayers() {
+	 void testGetAllPlayers() {
 		EntityManager em = emf.createEntityManager();
 
 		em.getTransaction().begin();
@@ -85,7 +84,7 @@ public class PlayerDAOImpIT {
 	}
 
 	@Test
-	public void testGetPlayer() {
+	 void testGetPlayer() {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		Player player = new PlayerBuilder().withName("Jane Doe").build();
@@ -99,7 +98,7 @@ public class PlayerDAOImpIT {
 	}
 
 	@Test
-	public void testUpdatePlayer() {
+	 void testUpdatePlayer() {
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction transaction = em.getTransaction();
 		transaction.begin();
@@ -116,7 +115,7 @@ public class PlayerDAOImpIT {
 	}
 
 	@Test
-	public void testUpdatePlayerWhenRollbackOnRuntimeException() {
+	 void testUpdatePlayerWhenRollbackOnRuntimeException() {
 		// Use the custom TestPlayerDAOIMPL that throws the exception
 		TestPlayerDAOIMPL playerDAO = new TestPlayerDAOIMPL(emf);
 
@@ -136,7 +135,7 @@ public class PlayerDAOImpIT {
 	}
 
 	@Test
-	public void testUpdatePlayerTriggersRollbackOnRuntimeException() {
+	void testUpdatePlayerTriggersRollbackOnRuntimeException() {
 		// Mock the EntityManager and EntityTransaction
 		EntityManager emMock = Mockito.mock(EntityManager.class);
 		EntityTransaction transactionMock = Mockito.mock(EntityTransaction.class);
@@ -163,7 +162,7 @@ public class PlayerDAOImpIT {
 				.merge(Mockito.any(Player.class));
 
 		// Assert that the RuntimeException is thrown when updatePlayer is called
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+		assertThrows(RuntimeException.class, () -> {
 			dao.updatePlayer(player);
 		});
 
@@ -177,7 +176,7 @@ public class PlayerDAOImpIT {
 	
 	
 	@Test
-	public void testUpdatePlayerDoesNotRollbackWhenTransactionIsNull() {
+	void testUpdatePlayerDoesNotRollbackWhenTransactionIsNull() {
 	    // Spy the real EntityManagerFactory
 	    EntityManagerFactory emfSpy = Mockito.spy(emf);
 
@@ -211,7 +210,7 @@ public class PlayerDAOImpIT {
 	}
 
 	@Test
-	public void testUpdatePlayerCommitsTransactionSuccessfully() {
+	void testUpdatePlayerCommitsTransactionSuccessfully() {
 	    // Spy the real EntityManagerFactory
 	    EntityManagerFactory emfSpy = Mockito.spy(emf);
 
@@ -308,7 +307,7 @@ public class PlayerDAOImpIT {
 		em.persist(player);
 		em.getTransaction().commit();
 
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+		assertThrows(RuntimeException.class, () -> {
 			playerDAO.deletePlayer(player);
 		});
 		Player managedPlayer = em.find(Player.class, player.getId());
@@ -400,7 +399,7 @@ public class PlayerDAOImpIT {
 	    Mockito.when(spiedEmf.createEntityManager()).thenReturn(emSpy);
 
 	    // Inject the spied EntityManagerFactory into the PlayerDAOIMPL
-	    PlayerDAOIMPL playerDAO = new PlayerDAOIMPL(spiedEmf);
+	    PlayerDAOIMPL playerDAOwithspiedEmf = new PlayerDAOIMPL(spiedEmf);
 
 	    // Create a player instance
 	    Player player = new Player();
@@ -415,7 +414,7 @@ public class PlayerDAOImpIT {
 
 	    // Act & Assert: Ensure that the exception is thrown and rollback happens
 	    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-	        playerDAO.deletePlayer(player);
+	        playerDAOwithspiedEmf.deletePlayer(player);
 	    });
 
 	    // Check that the exception message is correct
@@ -540,7 +539,7 @@ public class PlayerDAOImpIT {
 	    Mockito.doThrow(new RuntimeException("Simulated Exception")).when(emSpy).remove(Mockito.any(Player.class));
 
 	    // Act & Assert: Ensure that the exception is thrown and rollback happens
-	    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+	    assertThrows(RuntimeException.class, () -> {
 	        playerDAO.deletePlayer(player);
 	    });
 

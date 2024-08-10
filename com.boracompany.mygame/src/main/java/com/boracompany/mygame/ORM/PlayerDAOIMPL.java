@@ -11,7 +11,6 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.boracompany.mygame.Controller.GameController;
 import com.boracompany.mygame.Model.Player;
 
 public class PlayerDAOIMPL implements PlayerDAO {
