@@ -32,9 +32,9 @@ jobs:
       run: mvn clean verify -Pmutation-testing
       working-directory: com.boracompany.mygame
 
-  - name: Archive Mutation Test Report
-    uses: actions/upload-artifact@v4
-    if: ${{ always() }}
-    with:
-      name: pitest-report
-      path: '**/target/pit-reports/**/*.html'
+    - name: Archive Mutation Test Report
+      uses: actions/upload-artifact@v4
+      if: ${{ always() }}
+      with:
+        name: pitest-report
+        path: '**/target/pit-reports/**/*.html'
