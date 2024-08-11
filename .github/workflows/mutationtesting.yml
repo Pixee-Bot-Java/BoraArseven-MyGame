@@ -1,7 +1,6 @@
 name: Mutation Testing with Pitest
 
 on:
-on:
   pull_request:
     branches:
       - main
