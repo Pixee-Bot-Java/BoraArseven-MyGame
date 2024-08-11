@@ -283,7 +283,7 @@ since javax.xml.bind has been removed from the JDK -->
 						<mutators>
 							<mutator>ALL</mutator>
 						</mutators>
-						<mutationThreshold>50</mutationThreshold>
+						<mutationThreshold>75</mutationThreshold>
 						<avoidCallsTo>
 							<avoidCallsTo>java.util.logging</avoidCallsTo>
 							<avoidCallsTo>org.apache.log4j</avoidCallsTo>
