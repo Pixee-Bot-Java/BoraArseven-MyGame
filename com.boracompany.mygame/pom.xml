@@ -281,7 +281,7 @@ since javax.xml.bind has been removed from the JDK -->
 							Exclude IT folder -->
 						</excludedClasses>
 						<mutators>
-							<mutator>DEFAULTS</mutator>
+							<mutator>ALL</mutator>
 						</mutators>
 						<mutationThreshold>50</mutationThreshold>
 						<avoidCallsTo>
