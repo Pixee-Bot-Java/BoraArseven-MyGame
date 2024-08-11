@@ -30,7 +30,7 @@ jobs:
       working-directory: com.boracompany.mygame
     - name: Generate JUnit Report
       run: >
-         mvn -f com.examples.myproject/pom.xml
+         mvn -f com.boracompany.mygame/pom.xml
          surefire-report:report-only site:site -DgenerateReports=false
       if: ${{ always() }}
     - name: Archive JUnit Report
