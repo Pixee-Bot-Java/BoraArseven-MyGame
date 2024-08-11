@@ -28,6 +28,7 @@
 		<postresql.version>42.7.3</postresql.version>
 		<sonar.organization>boraarseven</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<pitest.version>1.16.1</pitest.version>
 	</properties>
 
 	<dependencies>
@@ -395,9 +396,30 @@ since javax.xml.bind has been removed from the JDK -->
 			</build>
 		</profile>
 		<profile>
+			<id>mutation-testing</id>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- configured also in pluginManagement -->
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-maven</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>mutationCoverage</goal>
+								</goals>
+								<phase>verify</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>docker</id>
 			<build>
 				<plugins>
+
 					<!--<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
