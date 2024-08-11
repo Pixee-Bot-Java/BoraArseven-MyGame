@@ -1,23 +1,26 @@
-# This workflow will build a Java project with Maven
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
-name: Java 17 CI with Maven
+name: Mutation Testing with Pitest
 
 on:
-  push:
+on:
   pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight UTC
 
 jobs:
-  build:
-
+  mutation-testing:
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: 17
+
     - name: Cache local Maven repository
       uses: actions/cache@v4
       with:
@@ -25,17 +28,14 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven
+
     - name: Build with Maven
-      run: mvn clean verify -Pjacoco -DrepoToken=${{ secrets.COVERALLS_REPO_TOKEN }} coveralls:report
+      run: mvn clean verify -Pmutation-testing
       working-directory: com.boracompany.mygame
-    - name: Generate JUnit Report
-      run: >
-         mvn -f com.examples.myproject/pom.xml
-         surefire-report:report-only site:site -DgenerateReports=false
-      if: ${{ always() }}
-    - name: Archive JUnit Report
+
+    - name: Archive Mutation Test Report
       uses: actions/upload-artifact@v2
       if: ${{ always() }}
       with:
-      name: surefire-report-jdk-17
-      path: '**/target/site'
+        name: pitest-report
+        path: '**/target/pit-reports/**/*.html'
