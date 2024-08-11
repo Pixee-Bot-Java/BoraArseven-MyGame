@@ -28,3 +28,14 @@ jobs:
     - name: Build with Maven
       run: mvn clean verify -Pjacoco -DrepoToken=${{ secrets.COVERALLS_REPO_TOKEN }} coveralls:report
       working-directory: com.boracompany.mygame
+    - name: Generate JUnit Report
+      run: >
+         mvn -f com.boracompany.mygame/pom.xml
+         surefire-report:report-only site:site -DgenerateReports=false
+      if: ${{ always() }}
+    - name: Archive JUnit Report
+      uses: actions/upload-artifact@v4
+      if: ${{ always() }}
+      with:
+        name: surefire-report-jdk-17
+        path: '**/target/site'

@@ -28,6 +28,7 @@
 		<postresql.version>42.7.3</postresql.version>
 		<sonar.organization>boraarseven</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<pitest.version>1.16.1</pitest.version>
 	</properties>
 
 	<dependencies>
@@ -164,6 +165,11 @@
 			<artifactId>log4j-core</artifactId>
 			<version>2.23.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.pitest</groupId>
+			<artifactId>pitest-junit5-plugin</artifactId>
+			<version>1.2.1 </version>
+		</dependency>
 	</dependencies>
 	<build>
 
@@ -262,7 +268,7 @@ since javax.xml.bind has been removed from the JDK -->
 				<plugin>
 					<groupId>org.pitest</groupId>
 					<artifactId>pitest-maven</artifactId>
-					<version>1.7.0</version>
+					<version>${pitest.version}</version>
 					<configuration>
 						<targetClasses>
 							<param>com.boracompany.mygame.*</param>
@@ -270,10 +276,20 @@ since javax.xml.bind has been removed from the JDK -->
 						<targetTests>
 							<param>com.boracompany.mygame.*</param>
 						</targetTests>
+						<excludedClasses>
+							<param>com.boracompany.mygame.IT.*</param> <!--
+							Exclude IT folder -->
+						</excludedClasses>
 						<mutators>
-							<mutator>DEFAULTS</mutator>
+							<mutator>ALL</mutator>
 						</mutators>
 						<mutationThreshold>50</mutationThreshold>
+						<avoidCallsTo>
+							<avoidCallsTo>java.util.logging</avoidCallsTo>
+							<avoidCallsTo>org.apache.log4j</avoidCallsTo>
+							<avoidCallsTo>org.slf4j</avoidCallsTo>
+							<avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
+						</avoidCallsTo>
 					</configuration>
 					<executions>
 						<execution>
@@ -289,8 +305,12 @@ since javax.xml.bind has been removed from the JDK -->
 					<version>3.8.0</version>
 				</plugin>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.22.1</version>
+					<configuration>
+						<argLine>-Xmx4096m</argLine>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
@@ -301,6 +321,9 @@ since javax.xml.bind has been removed from the JDK -->
 							<exclude>**/Main/**</exclude>
 							<exclude>**/Model/**</exclude>
 							<exclude>**/Hibernate*</exclude>
+
+							<exclude>**/Controller/**</exclude>
+
 						</excludes>
 					</configuration>
 					<executions>
@@ -339,20 +362,15 @@ since javax.xml.bind has been removed from the JDK -->
 					</executions>
 				</plugin>
 				<plugin>
-					<groupId>org.eluder.coveralls</groupId>
-					<artifactId>coveralls-maven-plugin</artifactId>
-					<version>4.3.0</version>
-					<dependencies>
-						<!-- This is required when using JDK 9 or higher since
-						javax.xml.bind has been removed from the JDK -->
-						<dependency>
-							<groupId>javax.xml.bind</groupId>
-							<artifactId>jaxb-api</artifactId>
-							<version>2.3.1</version>
-						</dependency>
-					</dependencies>
+					<artifactId>maven-surefire-report-plugin</artifactId>
+					<version>2.22.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.9.1</version>
 				</plugin>
 			</plugins>
+
 		</pluginManagement>
 	</build>
 	<profiles>
@@ -395,9 +413,30 @@ since javax.xml.bind has been removed from the JDK -->
 			</build>
 		</profile>
 		<profile>
+			<id>mutation-testing</id>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- configured also in pluginManagement -->
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-maven</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>mutationCoverage</goal>
+								</goals>
+								<phase>verify</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>docker</id>
 			<build>
 				<plugins>
+
 					<!--<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>docker-maven-plugin</artifactId>

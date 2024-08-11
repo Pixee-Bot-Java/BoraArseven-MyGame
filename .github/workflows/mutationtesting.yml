@@ -1,0 +1,40 @@
+name: Mutation Testing with Pitest
+
+on:
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight UTC
+
+jobs:
+  mutation-testing:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: 17
+
+    - name: Cache local Maven repository
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven
+
+    - name: Build with Maven
+      run: mvn clean verify -Pmutation-testing
+      working-directory: com.boracompany.mygame
+
+    - name: Archive Mutation Test Report
+      uses: actions/upload-artifact@v4
+      if: ${{ always() }}
+      with:
+        name: pitest-report
+        path: '**/target/pit-reports/**/*.html'
