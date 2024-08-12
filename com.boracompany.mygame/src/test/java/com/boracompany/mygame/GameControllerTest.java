@@ -15,17 +15,17 @@ import com.boracompany.mygame.Model.PlayerBuilder;
 class GameControllerTest {
     private static final Logger LOGGER = LogManager.getLogger(GameControllerTest.class);
     GameController controller;
+    PlayerBuilder builder;
 
-    // before each test, controller will be reset
     @BeforeEach
     void Setup() {
         controller = new GameController();
+        builder = new PlayerBuilder();  // Initialize the builder once
     }
 
     @Test
     void testWhenAttackingDefendingPlayerisNullThrowsException() {
-        PlayerBuilder builder = new PlayerBuilder();
-        Player attacker = builder.withDamage(10).withName("Attacker").withHealth(30).build();
+        Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
         Player defender = null;
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -36,9 +36,8 @@ class GameControllerTest {
 
     @Test
     void testwhenAttackingAttackingPLayerisNullThrowsException() {
-        PlayerBuilder builder = new PlayerBuilder();
         Player attacker = null;
-        Player defender = builder.withDamage(10).withName("Defender").withHealth(30).build();
+        Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(30).build();
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             controller.attack(attacker, defender);
@@ -59,11 +58,8 @@ class GameControllerTest {
 
     @Test
     void AttackerReducesHealthOfDefender() {
-        PlayerBuilder attackerBuilder = new PlayerBuilder();
-        PlayerBuilder defenderBuilder = new PlayerBuilder();
-
-        Player attacker = attackerBuilder.withDamage(10).withName("Attacker").withHealth(30).build();
-        Player defender = defenderBuilder.withDamage(10).withName("Defender").withHealth(30).build();
+        Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
+        Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(30).build();
 
         controller.attack(attacker, defender);
 
@@ -75,11 +71,8 @@ class GameControllerTest {
 
     @Test
     void AttackerReducesHealthOfDefenderNotMinus() {
-        PlayerBuilder attackerBuilder = new PlayerBuilder();
-        PlayerBuilder defenderBuilder = new PlayerBuilder();
-
-        Player attacker = attackerBuilder.withDamage(10).withName("Attacker").withHealth(30).build();
-        Player defender = defenderBuilder.withDamage(10).withName("Defender").withHealth(10).build();
+        Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
+        Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(10).build();
 
         controller.attack(attacker, defender);
 
@@ -91,11 +84,8 @@ class GameControllerTest {
 
     @Test
     void DefenderDiesIfHealthsmallerthanzero() {
-        PlayerBuilder attackerBuilder = new PlayerBuilder();
-        PlayerBuilder defenderBuilder = new PlayerBuilder();
-
-        Player attacker = attackerBuilder.withDamage(10).withName("Attacker").withHealth(30).build();
-        Player defender = defenderBuilder.withDamage(10).withName("Defender").withHealth(10).build();
+        Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
+        Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(10).build();
 
         controller.attack(attacker, defender);
 
@@ -108,11 +98,8 @@ class GameControllerTest {
 
     @Test
     void DefenderNotDiesIfHealthbiggerthanzero() {
-        PlayerBuilder attackerBuilder = new PlayerBuilder();
-        PlayerBuilder defenderBuilder = new PlayerBuilder();
-
-        Player attacker = attackerBuilder.withDamage(5).withName("Attacker").withHealth(30).build();
-        Player defender = defenderBuilder.withDamage(10).withName("Defender").withHealth(50).build();
+        Player attacker = builder.resetBuilder().withDamage(5).withName("Attacker").withHealth(30).build();
+        Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(50).build();
 
         LOGGER.debug("Attacker created with damage: {}", attacker.getDamage());
 
@@ -130,5 +117,18 @@ class GameControllerTest {
 
         assertEquals(30, defender.getHealth());
         assertEquals(true, defender.Isalive());
+    }
+    
+    @Test
+    void DamageShouldBePositive() {
+        Player attacker = builder.resetBuilder().withDamage(-5).withName("Attacker").withHealth(30).build();
+        Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(50).build();
+
+        LOGGER.debug("Attacker created with damage: {}", attacker.getDamage());
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            controller.attack(attacker, defender);
+        });
+        assertEquals("Damage should be positive", exception.getMessage());
     }
 }

@@ -9,20 +9,33 @@ public class GameController {
 	private static final Logger LOGGER = LogManager.getLogger(GameController.class);
 
 	public void attack(Player attacker, Player defender) {
-		// TODO Auto-generated method stub
-		if (attacker != null && defender != null) {
-			float defenderHealth = defender.getHealth();
-			final float damage = attacker.getDamage();
-			LOGGER.info("defenderHealth:{} Attack Damage: {} ", defender.getHealth(),attacker.getDamage());
-			float newHealth = defenderHealth - damage;
-			if (newHealth >= 0)
-				defender.setHealth(defenderHealth - damage);
-			else {
-				defender.setHealth(0);
-				defender.setAlive(false);
-			}
-		} else {
+		if (attacker == null || defender == null) {
+			LOGGER.error("Attack failed: Attacker or defender is null. Attacker: {}, Defender: {}", attacker, defender);
 			throw new IllegalArgumentException("Attacker or defender is not valid");
+		}
+
+		final float damage = attacker.getDamage();
+
+		if (damage <= 0) {
+			LOGGER.error("Attack failed: Damage must be positive. Attacker: {}, Damage: {}", attacker.getName(),
+					damage);
+			throw new IllegalArgumentException("Damage should be positive");
+		}
+
+		float defenderHealth = defender.getHealth();
+		LOGGER.info("Attack initiated: Attacker: {} (Damage: {}), Defender: {} (Health: {})", attacker.getName(),
+				damage, defender.getName(), defenderHealth);
+
+		float newHealth = defenderHealth - damage;
+
+		if (newHealth > 0) {
+			defender.setHealth(newHealth);
+			LOGGER.info("Attack successful: Defender: {}'s new health: {}", defender.getName(), newHealth);
+		} else {
+			defender.setHealth(0);
+			defender.setAlive(false);
+			LOGGER.info("Attack successful: Defender: {} has been defeated (Health: 0, IsAlive: {})",
+					defender.getName(), defender.Isalive());
 		}
 	}
 }

@@ -32,4 +32,8 @@ public class PlayerBuilder {
         player.setAlive(isAlive);
         return this;
     }
+    public PlayerBuilder resetBuilder() {
+    	this.player = new Player();
+    	return this;
+    }
 }
