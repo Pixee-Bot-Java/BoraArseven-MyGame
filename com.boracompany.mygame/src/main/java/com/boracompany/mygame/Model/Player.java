@@ -14,17 +14,18 @@ public class Player {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String name;
+	private String name = "default";
 	
-	private float health;
+	private float health = 10;
 	
-	private boolean isalive;
+	private float damage;
+	private boolean isalive = true;
 	
 	public boolean Isalive() {
 		return isalive;
 	}
 
-	public void setIsalive(boolean isalive) {
+	public void setAlive(boolean isalive) {
 		this.isalive = isalive;
 	}
 
@@ -44,7 +45,7 @@ public class Player {
 		this.damage = damage;
 	}
 
-	private float damage;
+
 
 	
 	// Getters and Settersplayer

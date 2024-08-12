@@ -13,11 +13,13 @@ public class GameController {
 		if (attacker != null && defender != null) {
 			float defenderHealth = defender.getHealth();
 			final float damage = attacker.getDamage();
+			LOGGER.info("defenderHealth:{} Attack Damage: {} ", defender.getHealth(),attacker.getDamage());
 			float newHealth = defenderHealth - damage;
 			if (newHealth >= 0)
 				defender.setHealth(defenderHealth - damage);
 			else {
 				defender.setHealth(0);
+				defender.setAlive(false);
 			}
 		} else {
 			throw new IllegalArgumentException("Attacker or defender is not valid");
