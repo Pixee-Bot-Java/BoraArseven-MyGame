@@ -7,8 +7,11 @@ public class GameController {
 	
 	private static final Logger LOGGER = LogManager.getLogger(GameController.class);
 
-//	void attack (Player attacker, Player defender) {
-//		defender.setHealth(0);
-//	}
-	
+	public void attack(Player attacker, Player defender) {
+		// TODO Auto-generated method stub
+throw new IllegalArgumentException("Attacker or defender is not valid");
+
+	}
+
+
 }
