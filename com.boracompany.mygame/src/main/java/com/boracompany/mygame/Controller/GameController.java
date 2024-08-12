@@ -6,12 +6,19 @@ import org.apache.logging.log4j.Logger;
 public class GameController {
 	
 	private static final Logger LOGGER = LogManager.getLogger(GameController.class);
-
+	
+	
 	public void attack(Player attacker, Player defender) {
 		// TODO Auto-generated method stub
-throw new IllegalArgumentException("Attacker or defender is not valid");
+		if (attacker !=null && defender != null) {
+			defender.setHealth(defender.getHealth()-attacker.getDamage());
+		}
+		else {
+			throw new IllegalArgumentException("Attacker or defender is not valid");
+		}
 
 	}
+	
 
 
 }
