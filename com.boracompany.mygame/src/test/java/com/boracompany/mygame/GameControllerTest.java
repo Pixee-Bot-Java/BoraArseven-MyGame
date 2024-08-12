@@ -62,4 +62,14 @@ class GameControllerTest {
 		assertEquals(15, defender.getHealth());
 	}
 	
+	@Test
+	void AttackerReducesHealthOfDefenderNotMinus() {
+		Player attacker = builder.withDamage(10).withName("Attacker").withHealth(30).build();
+		Player defender =  builder.withDamage(10).withName("Defender").withHealth(10).build();
+		controller.attack(attacker, defender);
+		attacker.setDamage(5);
+		controller.attack(attacker, defender);
+		assertEquals(0, defender.getHealth());
+	}
+	
 }
