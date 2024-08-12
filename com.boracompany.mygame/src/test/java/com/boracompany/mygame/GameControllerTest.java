@@ -1,5 +1,6 @@
 package com.boracompany.mygame;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -70,6 +71,27 @@ class GameControllerTest {
 		attacker.setDamage(5);
 		controller.attack(attacker, defender);
 		assertEquals(0, defender.getHealth());
+	}
+	
+	@Test
+	void DefenderDiesIfHealthsmallerthanzero(){
+		Player attacker = builder.withDamage(10).withName("Attacker").withHealth(30).build();
+		Player defender =  builder.withDamage(10).withName("Defender").withHealth(10).build();
+		controller.attack(attacker, defender);
+		attacker.setDamage(5);
+		controller.attack(attacker, defender);
+		assertEquals(0, defender.getHealth());
+		assertEquals(false, defender.Isalive());
+	}
+	@Test
+	void DefenderNotDiesIfHealthbiggerthanzero(){
+		Player attacker = builder.withDamage(5).withName("Attacker").withHealth(30).build();
+		Player defender =  builder.withDamage(10).withName("Defender").withHealth(50).build();
+		controller.attack(attacker, defender);
+		attacker.setDamage(15);
+		controller.attack(attacker, defender);
+		assertEquals(30, defender.getHealth());
+		assertEquals(false, defender.Isalive());
 	}
 	
 }

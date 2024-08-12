@@ -11,7 +11,6 @@ public class GameController {
 	public void attack(Player attacker, Player defender) {
 		// TODO Auto-generated method stub
 		if (attacker != null && defender != null) {
-
 			float defenderHealth = defender.getHealth();
 			final float damage = attacker.getDamage();
 			float newHealth = defenderHealth - damage;
@@ -20,7 +19,6 @@ public class GameController {
 			else {
 				defender.setHealth(0);
 			}
-
 		} else {
 			throw new IllegalArgumentException("Attacker or defender is not valid");
 		}
