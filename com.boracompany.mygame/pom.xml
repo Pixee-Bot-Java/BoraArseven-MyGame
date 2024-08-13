@@ -204,6 +204,7 @@
 							<resources>
 								<resource>
 									<directory>src/bdd/resources</directory>
+									<directory>src/it/resources</directory>									
 								</resource>
 							</resources>
 						</configuration>

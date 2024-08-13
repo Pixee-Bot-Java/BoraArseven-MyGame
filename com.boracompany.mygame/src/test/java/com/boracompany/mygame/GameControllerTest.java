@@ -154,6 +154,14 @@ class GameControllerTest {
 	    Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 	        controller.attack(attacker, defender);
 	    });
-	    assertEquals("Damage should be a positive value", exception.getMessage());
+	    assertEquals("Damage should be positive", exception.getMessage());
+	}
+	@Test
+	void MaximumDamageHandling() {
+	    Player attacker = builder.resetBuilder().withDamage(Float.MAX_VALUE).withName("Attacker").withHealth(30).build();
+	    Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(50).build();
+	    controller.attack(attacker, defender);
+	    assertEquals(0, defender.getHealth());
+	    assertEquals(false, defender.Isalive());
 	}
 }
