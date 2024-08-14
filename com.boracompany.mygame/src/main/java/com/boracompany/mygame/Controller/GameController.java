@@ -14,9 +14,9 @@ public class GameController {
 			throw new IllegalArgumentException("Attacker or defender is not valid");
 		}
 
-		final Float damage = attacker.getDamage(); // Change to Float
-
-		if (damage == null || damage <= 0) { // Now null check is valid
+		// Use float instead of Float to avoid nullability issues
+		float damage = attacker.getDamage();
+		if (damage <= 0) {
 			LOGGER.error("Attack failed: Damage must be positive. Attacker: {}, Damage: {}", attacker.getName(),
 					damage);
 			throw new IllegalArgumentException("Damage should be positive");
@@ -38,4 +38,5 @@ public class GameController {
 					defender.getName(), defender.Isalive());
 		}
 	}
+
 }
