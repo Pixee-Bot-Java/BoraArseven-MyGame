@@ -2,6 +2,8 @@ package com.boracompany.mygame;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -144,7 +146,7 @@ class TestGameController {
         });
         assertEquals("Damage should be positive", exception.getMessage());
     }
-    
+
     @Test
     void DamageShouldBeNonZero() {
         Player attacker = builder.resetBuilder().withDamage(0).withName("Attacker").withHealth(30).build();
@@ -166,7 +168,7 @@ class TestGameController {
         assertEquals(0, defender.getHealth());
         assertEquals(false, defender.Isalive());
     }
-    
+
     @Test
     void AttackerDealsExactDamageToKillDefender() {
         Player attacker = builder.resetBuilder().withDamage(50).withName("Attacker").withHealth(30).build();
@@ -177,7 +179,7 @@ class TestGameController {
         assertEquals(0, defender.getHealth());
         assertEquals(false, defender.Isalive());
     }
-    
+
     @Test
     void AttackerDealsDamageToIncapacitateDefender() {
         Player attacker = builder.resetBuilder().withDamage(60).withName("Attacker").withHealth(30).build();
@@ -201,13 +203,40 @@ class TestGameController {
     }
 
     @Test
-    void AttackFailsIfAttackerHasNoDamage() {
-        Player attacker = builder.resetBuilder().withDamage(0).withName("Attacker").withHealth(30).build();
+    void TestDefenderHealthBoundaryAtZero() {
+        Player attacker = builder.resetBuilder().withDamage(50).withName("Attacker").withHealth(30).build();
         Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(50).build();
+
+        controller.attack(attacker, defender);
+
+        assertEquals(0, defender.getHealth());
+        assertEquals(false, defender.Isalive());
+    }
+
+    @Test
+    void TestAttackerDamageNull() {
+        // Mock the Player class
+        Player attacker = mock(Player.class);
+        Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(50).build();
+
+        // Define the behavior of the mock object
+        when(attacker.getDamage()).thenReturn(null);
+        when(attacker.getName()).thenReturn("Attacker");
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             controller.attack(attacker, defender);
         });
         assertEquals("Damage should be positive", exception.getMessage());
+    }
+
+    @Test
+    void TestLoggingForAttackSuccess() {
+        Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
+        Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(20).build();
+
+        controller.attack(attacker, defender);
+
+        assertEquals(10, defender.getHealth());
+        // This test ensures the attack success condition is covered and indirectly the log message.
     }
 }
