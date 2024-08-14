@@ -12,8 +12,8 @@ import com.boracompany.mygame.Controller.GameController;
 import com.boracompany.mygame.Model.Player;
 import com.boracompany.mygame.Model.PlayerBuilder;
 
-class GameControllerTest {
-	private static final Logger LOGGER = LogManager.getLogger(GameControllerTest.class);
+class TestGameController {
+	private static final Logger LOGGER = LogManager.getLogger(TestGameController.class);
 	GameController controller;
 	PlayerBuilder builder;
 
