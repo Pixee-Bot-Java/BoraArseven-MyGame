@@ -313,59 +313,56 @@ since javax.xml.bind has been removed from the JDK -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.22.1</version>
+					<version>2.22.2</version>
 					<configuration>
-						<argLine>${surefireArgLine}</argLine>
+						<includes>
+							<include>**/Test*.java</include>
+							<include>**/*Test.java</include>
+							<include>**/*Tests.java</include>
+							<include>**/*TestCase.java</include>
+						</includes>
 					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.9</version> <!-- Using the version that works
-					for you -->
+					<version>0.8.12</version>
 					<configuration>
+
 						<excludes>
 							<exclude>**/Main/**</exclude>
 							<exclude>**/Model/**</exclude>
+							<exclude>**/Hibernate*</exclude>
+
 						</excludes>
 					</configuration>
 					<executions>
-						<!-- Prepare JaCoCo agent before tests run -->
 						<execution>
-							<id>prepare-agent</id>
+							<id>default-prepare-agent</id>
 							<goals>
 								<goal>prepare-agent</goal>
 							</goals>
-							<phase>initialize</phase> <!-- Changed to initialize
-							to ensure agent is ready before tests -->
 						</execution>
-						<!-- Generate code coverage report after tests have run -->
 						<execution>
-							<id>report</id>
+							<id>default-report</id>
 							<goals>
 								<goal>report</goal>
 							</goals>
-							<phase>verify</phase> <!-- Ensure report generation
-							happens after tests -->
 						</execution>
-						<!-- Enforce code coverage rules -->
 						<execution>
-							<id>check</id>
+							<id>jacoco-check</id>
 							<goals>
 								<goal>check</goal>
 							</goals>
-							<phase>verify</phase>
 							<configuration>
 								<rules>
 									<rule>
-										<element>BUNDLE</element>
+										<element>PACKAGE</element>
 										<limits>
 											<limit>
 												<counter>LINE</counter>
 												<value>COVEREDRATIO</value>
-												<minimum>0.80</minimum> <!--
-												Adjusted threshold for line
-												coverage -->
+												<minimum>0.95</minimum>
 											</limit>
 										</limits>
 									</rule>
@@ -374,7 +371,6 @@ since javax.xml.bind has been removed from the JDK -->
 						</execution>
 					</executions>
 				</plugin>
-
 				<plugin>
 					<artifactId>maven-surefire-report-plugin</artifactId>
 					<version>2.22.2</version>
@@ -383,6 +379,8 @@ since javax.xml.bind has been removed from the JDK -->
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.9.1</version>
 				</plugin>
+
+
 			</plugins>
 
 		</pluginManagement>
