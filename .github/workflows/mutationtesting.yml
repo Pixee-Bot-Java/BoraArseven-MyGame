@@ -27,6 +27,7 @@ jobs:
       run: mvn verify org.pitest:pitest-maven:mutationCoverage -Pmutation-testing
       working-directory: com.boracompany.mygame
 
+	  
     - name: Archive Mutation Test Report
       uses: actions/upload-artifact@v4
       if: ${{ always() }}
