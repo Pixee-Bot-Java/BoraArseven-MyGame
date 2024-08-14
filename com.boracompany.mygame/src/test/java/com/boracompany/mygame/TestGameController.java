@@ -252,4 +252,65 @@ class TestGameController {
 		assertTrue(defender.Isalive()); // Defender should still be alive
 	}
 
+	@Test
+	void testValidatePlayersWithNonNullValues() {
+		Player attacker = mock(Player.class);
+		Player defender = mock(Player.class);
+
+
+		when(attacker.getDamage()).thenReturn(10.0f);
+
+
+		controller.attack(attacker, defender);
+	}
+
+	@Test
+	void testValidatePlayersWithNullAttacker() {
+		Player defender = mock(Player.class);
+		// This should throw an IllegalArgumentException
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			controller.attack(null, defender);
+		});
+		assertTrue(exception.getMessage().contains("Attacker or defender is null"));
+	}
+
+	@Test
+	void testValidatePlayersWithNullDefender() {
+		Player attacker = mock(Player.class);
+		// This should throw an IllegalArgumentException
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			controller.attack(attacker, null);
+		});
+		assertTrue(exception.getMessage().contains("Attacker or defender is null"));
+	}
+
+	@Test
+	void testCalculateDamageWithPositiveValue() {
+		Player attacker = mock(Player.class);
+		when(attacker.getDamage()).thenReturn(10.0f);
+		// This should not throw an exception
+		controller.attack(attacker, mock(Player.class));
+	}
+
+	@Test
+	void testCalculateDamageWithZeroValue() {
+		Player attacker = mock(Player.class);
+		when(attacker.getDamage()).thenReturn(0.0f);
+		// This should throw an IllegalArgumentException
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			controller.attack(attacker, mock(Player.class));
+		});
+		assertTrue(exception.getMessage().contains("Damage should be positive"));
+	}
+
+	@Test
+	void testCalculateDamageWithNegativeValue() {
+		Player attacker = mock(Player.class);
+		when(attacker.getDamage()).thenReturn(-5.0f);
+		// This should throw an IllegalArgumentException
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			controller.attack(attacker, mock(Player.class));
+		});
+		assertTrue(exception.getMessage().contains("Damage should be positive"));
+	}
 }
