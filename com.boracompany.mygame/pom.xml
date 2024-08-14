@@ -173,7 +173,7 @@
 		<dependency>
 			<groupId>org.pitest</groupId>
 			<artifactId>pitest-junit5-plugin</artifactId>
-			<version>1.2.1 </version>
+			<version>1.2.1</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -305,7 +305,11 @@ since javax.xml.bind has been removed from the JDK -->
 							<avoidCallsTo>org.slf4j</avoidCallsTo>
 							<avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
 							<avoidCallsTo>org.apache.logging.log4j</avoidCallsTo>
+
 						</avoidCallsTo>
+						<outputFormats>
+							<param>HTML</param>
+						</outputFormats>
 					</configuration>
 					<executions>
 						<execution>
@@ -390,7 +394,6 @@ since javax.xml.bind has been removed from the JDK -->
 					<version>3.9.1</version>
 				</plugin>
 
-
 			</plugins>
 
 		</pluginManagement>
@@ -408,6 +411,7 @@ since javax.xml.bind has been removed from the JDK -->
 				</plugins>
 			</build>
 		</profile>
+
 		<profile>
 			<id>coveralls</id>
 			<build>
