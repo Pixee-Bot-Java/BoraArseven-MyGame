@@ -1,0 +1,52 @@
+package com.boracompany.mygame.Model;
+
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "app_map") // Table name for the Map entity
+public class GameMap {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "map_id") // Foreign key in Player table to link back to the Map
+    private List<Player> players;
+
+    // Constructors
+    public GameMap() {}
+
+    public GameMap(String name, List<Player> players) {
+        this.name = name;
+        this.players = players;
+    }
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+}

@@ -29,7 +29,11 @@ public class PlayerBuilder {
     }
 
     public PlayerBuilder withIsAlive(boolean isAlive) {
-        player.setIsalive(isAlive);
+        player.setAlive(isAlive);
         return this;
+    }
+    public PlayerBuilder resetBuilder() {
+    	this.player = new Player();
+    	return this;
     }
 }
