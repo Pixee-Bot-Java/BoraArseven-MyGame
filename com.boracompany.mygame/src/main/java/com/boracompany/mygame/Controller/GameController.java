@@ -9,23 +9,47 @@ public class GameController {
 	private static final Logger LOGGER = LogManager.getLogger(GameController.class);
 
 	public void attack(Player attacker, Player defender) {
-		if (attacker == null || defender == null) {
-			LOGGER.error("Attack failed: Attacker or defender is null. Attacker: {}, Defender: {}", attacker, defender);
-			throw new IllegalArgumentException("Attacker or defender is not valid");
-		}
-		float damage = attacker.getDamage();
-		if (damage <= 0) {
-			LOGGER.error("Attack failed: Damage must be positive. Attacker: {}, Damage: {}", attacker.getName(),
-					damage);
-			throw new IllegalArgumentException("Damage should be positive");
-		}
+		validatePlayers(attacker, defender);
+
+		float damage = calculateDamage(attacker);
 
 		float defenderHealth = defender.getHealth();
+		logAttackInitiation(attacker, defender, damage, defenderHealth);
+
+		float newHealth = calculateNewHealth(defenderHealth, damage);
+
+		updateDefenderHealth(defender, newHealth);
+	}
+
+	private void validatePlayers(Player attacker, Player defender) {
+		if (attacker == null || defender == null) {
+			logAndThrowError("Attacker or defender is null.");
+		}
+	}
+
+	private float calculateDamage(Player attacker) {
+		float damage = attacker.getDamage();
+		if (damage <= 0) {
+			logAndThrowError("Damage should be positive");
+		}
+		return damage;
+	}
+
+	private void logAndThrowError(String message) {
+		LOGGER.error("Attack failed: " + message);
+		throw new IllegalArgumentException(message);
+	}
+
+	private void logAttackInitiation(Player attacker, Player defender, float damage, float defenderHealth) {
 		LOGGER.info("Attack initiated: Attacker: {} (Damage: {}), Defender: {} (Health: {})", attacker.getName(),
 				damage, defender.getName(), defenderHealth);
+	}
 
-		float newHealth = defenderHealth - damage;
+	private float calculateNewHealth(float defenderHealth, float damage) {
+		return defenderHealth - damage;
+	}
 
+	private void updateDefenderHealth(Player defender, float newHealth) {
 		if (newHealth > 0) {
 			defender.setHealth(newHealth);
 			LOGGER.info("Attack successful: Defender: {}'s new health: {}", defender.getName(), newHealth);
@@ -36,5 +60,4 @@ public class GameController {
 					defender.getName(), defender.Isalive());
 		}
 	}
-
 }

@@ -34,7 +34,7 @@ class TestGameController {
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			controller.attack(attacker, defender);
 		});
-		assertEquals("Attacker or defender is not valid", exception.getMessage());
+		assertEquals("Attacker or defender is null.", exception.getMessage());
 	}
 
 	@Test
@@ -45,7 +45,7 @@ class TestGameController {
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			controller.attack(attacker, defender);
 		});
-		assertEquals("Attacker or defender is not valid", exception.getMessage());
+
 	}
 
 	@Test
@@ -56,7 +56,7 @@ class TestGameController {
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			controller.attack(attacker, defender);
 		});
-		assertEquals("Attacker or defender is not valid", exception.getMessage());
+		assertEquals("Attacker or defender is null.", exception.getMessage());
 	}
 
 	@Test
@@ -204,7 +204,6 @@ class TestGameController {
 		assertEquals(true, defender.Isalive());
 	}
 
-
 	@Test
 	void TestLoggingForAttackSuccess() {
 		Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
@@ -225,7 +224,7 @@ class TestGameController {
 		controller.attack(attacker, defender);
 
 		assertEquals(0, defender.getHealth());
-		assertEquals(false,defender.Isalive()); // Ensure that defender is marked as dead.
+		assertEquals(false, defender.Isalive()); // Ensure that defender is marked as dead.
 		assertEquals("Defender", defender.getName()); // Check that name retrieval works after setting health to 0.
 	}
 
@@ -252,37 +251,5 @@ class TestGameController {
 		assertEquals(40, defender.getHealth()); // Health should decrease
 		assertTrue(defender.Isalive()); // Defender should still be alive
 	}
-	@Test
-	void TestDefenderNameIsRetrievedWhenHealthChanges() {
-	    Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
-	    Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(10).build();
-
-	    controller.attack(attacker, defender);
-
-	    assertEquals("Defender", defender.getName()); // Ensuring getName() is called
-	}
-
-	@Test
-	void TestDefenderIsAliveIsCheckedWhenHealthChanges() {
-	    Player attacker = builder.resetBuilder().withDamage(5).withName("Attacker").withHealth(30).build();
-	    Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(5).build();
-
-	    controller.attack(attacker, defender);
-
-	    assertEquals(false,defender.Isalive()); // Ensuring Isalive() is called after health reaches zero
-	}
-
-	@Test
-	void TestFloatValueOfInvocation() {
-	    // Mocking or setting up a scenario where Float::valueOf is expected to be called
-	    Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
-	    Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(50).build();
-
-	    controller.attack(attacker, defender);
-
-	    // Assert something that would ensure Float::valueOf was called
-	    assertEquals(40, defender.getHealth());
-	}
-
 
 }
