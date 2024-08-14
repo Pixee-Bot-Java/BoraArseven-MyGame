@@ -285,6 +285,10 @@ since javax.xml.bind has been removed from the JDK -->
 						<excludedClasses>
 							<param>com.boracompany.mygame.IT.*</param> <!--
 							Exclude IT folder -->
+								<param>com.boracompany.mygame.Main.*</param> <!--
+							Exclude Main folder -->
+							<param>com.boracompany.mygame.ORM.*</param><!--
+							Exclude ORM folder, since they are only tested in IT -->
 						</excludedClasses>
 						<mutators>
 							<mutator>ALL</mutator>
