@@ -13,18 +13,15 @@ public class GameController {
 			LOGGER.error("Attack failed: Attacker or defender is null. Attacker: {}, Defender: {}", attacker, defender);
 			throw new IllegalArgumentException("Attacker or defender is not valid");
 		}
-		// I did not use primitive type to null check (?)
-		final Float damage = attacker.getDamage();
-		
-		if (damage == null || damage <= 0) {
+
+		final Float damage = attacker.getDamage(); // Change to Float
+
+		if (damage == null || damage <= 0) { // Now null check is valid
 			LOGGER.error("Attack failed: Damage must be positive. Attacker: {}, Damage: {}", attacker.getName(),
 					damage);
 			throw new IllegalArgumentException("Damage should be positive");
 		}
-		
-		
-	
-		
+
 		float defenderHealth = defender.getHealth();
 		LOGGER.info("Attack initiated: Attacker: {} (Damage: {}), Defender: {} (Health: {})", attacker.getName(),
 				damage, defender.getName(), defenderHealth);
