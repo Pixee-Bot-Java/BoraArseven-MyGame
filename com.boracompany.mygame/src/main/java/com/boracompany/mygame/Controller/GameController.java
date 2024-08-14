@@ -13,8 +13,6 @@ public class GameController {
 			LOGGER.error("Attack failed: Attacker or defender is null. Attacker: {}, Defender: {}", attacker, defender);
 			throw new IllegalArgumentException("Attacker or defender is not valid");
 		}
-
-		// Use float instead of Float to avoid nullability issues
 		float damage = attacker.getDamage();
 		if (damage <= 0) {
 			LOGGER.error("Attack failed: Damage must be positive. Attacker: {}, Damage: {}", attacker.getName(),

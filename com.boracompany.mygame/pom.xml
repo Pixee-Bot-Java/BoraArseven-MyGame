@@ -294,6 +294,10 @@ since javax.xml.bind has been removed from the JDK -->
 						<mutators>
 							<mutator>ALL</mutator>
 						</mutators>
+						<excludedMethods>
+							<param>org.apache.logging.log4j.Logger::info</param>
+							<param>org.apache.logging.log4j.Logger::error</param>
+						</excludedMethods>
 						<mutationThreshold>75</mutationThreshold>
 						<avoidCallsTo>
 							<avoidCallsTo>java.util.logging</avoidCallsTo>

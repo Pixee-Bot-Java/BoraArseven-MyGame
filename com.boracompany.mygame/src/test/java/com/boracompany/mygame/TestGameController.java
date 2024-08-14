@@ -1,5 +1,6 @@
 package com.boracompany.mygame;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -203,17 +204,6 @@ class TestGameController {
 		assertEquals(true, defender.Isalive());
 	}
 
-	@Test
-	void TestDefenderHealthBoundaryAtZero() {
-		Player attacker = builder.resetBuilder().withDamage(50).withName("Attacker").withHealth(30).build();
-		Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(50).build();
-
-		controller.attack(attacker, defender);
-
-		assertEquals(0, defender.getHealth());
-		assertEquals(false, defender.Isalive());
-	}
-
 
 	@Test
 	void TestLoggingForAttackSuccess() {
@@ -226,4 +216,41 @@ class TestGameController {
 		// This test ensures the attack success condition is covered and indirectly the
 		// log message.
 	}
+
+	@Test
+	void TestDefenderHealthBoundaryAtZero() {
+		Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
+		Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(10).build();
+
+		controller.attack(attacker, defender);
+
+		assertEquals(0, defender.getHealth());
+		assertEquals(false,defender.Isalive()); // Ensure that defender is marked as dead.
+		assertEquals("Defender", defender.getName()); // Check that name retrieval works after setting health to 0.
+	}
+
+	@Test
+	void TestDamageZeroShouldFail() {
+		Player attacker = builder.resetBuilder().withDamage(0).withName("Attacker").withHealth(30).build();
+		Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(50).build();
+
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			controller.attack(attacker, defender);
+		});
+		assertEquals("Damage should be positive", exception.getMessage());
+		assertEquals("Attacker", attacker.getName()); // Ensure name retrieval works after invalid attack.
+	}
+
+	// Ensure attacking with positive damage works
+	@Test
+	void TestAttackingWithPositiveDamage() {
+		Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
+		Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(50).build();
+
+		controller.attack(attacker, defender);
+
+		assertEquals(40, defender.getHealth()); // Health should decrease
+		assertTrue(defender.Isalive()); // Defender should still be alive
+	}
+
 }
