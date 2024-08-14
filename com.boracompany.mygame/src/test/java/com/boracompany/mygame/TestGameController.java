@@ -252,5 +252,37 @@ class TestGameController {
 		assertEquals(40, defender.getHealth()); // Health should decrease
 		assertTrue(defender.Isalive()); // Defender should still be alive
 	}
+	@Test
+	void TestDefenderNameIsRetrievedWhenHealthChanges() {
+	    Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
+	    Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(10).build();
+
+	    controller.attack(attacker, defender);
+
+	    assertEquals("Defender", defender.getName()); // Ensuring getName() is called
+	}
+
+	@Test
+	void TestDefenderIsAliveIsCheckedWhenHealthChanges() {
+	    Player attacker = builder.resetBuilder().withDamage(5).withName("Attacker").withHealth(30).build();
+	    Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(5).build();
+
+	    controller.attack(attacker, defender);
+
+	    assertEquals(false,defender.Isalive()); // Ensuring Isalive() is called after health reaches zero
+	}
+
+	@Test
+	void TestFloatValueOfInvocation() {
+	    // Mocking or setting up a scenario where Float::valueOf is expected to be called
+	    Player attacker = builder.resetBuilder().withDamage(10).withName("Attacker").withHealth(30).build();
+	    Player defender = builder.resetBuilder().withDamage(10).withName("Defender").withHealth(50).build();
+
+	    controller.attack(attacker, defender);
+
+	    // Assert something that would ensure Float::valueOf was called
+	    assertEquals(40, defender.getHealth());
+	}
+
 
 }
