@@ -40,12 +40,23 @@ public class GameMapDAOIT {
 
 	@BeforeAll
 	void setUp() {
-		System.setProperty("DB_URL", postgreSQLContainer.getJdbcUrl());
-		System.setProperty("DB_USERNAME", postgreSQLContainer.getUsername());
-		System.setProperty("DB_PASSWORD", postgreSQLContainer.getPassword());
+		// Directly passing database properties
+		String dbUrl = postgreSQLContainer.getJdbcUrl();
+		String dbUser = postgreSQLContainer.getUsername();
+		String dbPassword = postgreSQLContainer.getPassword();
 
+		// Initialize HibernateUtil with connection properties
+		HibernateUtil.initialize(dbUrl, dbUser, dbPassword);
 		emf = HibernateUtil.getEntityManagerFactory();
 		gameMapDAO = new GameMapDAO(emf);
+	}
+
+	@AfterAll
+	void tearDown() {
+		HibernateUtil.close();
+		if (postgreSQLContainer != null) {
+			postgreSQLContainer.stop();
+		}
 	}
 
 	@BeforeEach
@@ -66,16 +77,6 @@ public class GameMapDAOIT {
 			throw new RuntimeException("Failed to reset database", e);
 		} finally {
 			em.close();
-		}
-	}
-
-	@AfterAll
-	void tearDown() {
-		if (emf != null) {
-			emf.close();
-		}
-		if (postgreSQLContainer != null) {
-			postgreSQLContainer.stop();
 		}
 	}
 
@@ -548,44 +549,44 @@ public class GameMapDAOIT {
 		// Verify that the EntityManager is closed after the operation
 		Mockito.verify(spyEm).close();
 	}
+
 	@Test
 	void testRemovePlayerFromMap_GameMapOrPlayerNotFound() {
-	    // Arrange
-	    GameMapDAO gameMapDAO = new GameMapDAO(emf);
+		// Arrange
+		GameMapDAO gameMapDAO = new GameMapDAO(emf);
 
-	    // Create and persist a GameMap
-	    EntityManager em = emf.createEntityManager();
-	    EntityTransaction transaction = em.getTransaction();
+		// Create and persist a GameMap
+		EntityManager em = emf.createEntityManager();
+		EntityTransaction transaction = em.getTransaction();
 
-	    try {
-	        transaction.begin();
-	        GameMap gameMap = new GameMap();
-	        em.persist(gameMap);
-	        transaction.commit();
+		try {
+			transaction.begin();
+			GameMap gameMap = new GameMap();
+			em.persist(gameMap);
+			transaction.commit();
 
-	        // Get the actual ID of the saved GameMap
-	        Long gameId = gameMap.getId();
+			// Get the actual ID of the saved GameMap
+			Long gameId = gameMap.getId();
 
-	        // Re-open the EntityManager for the operation we are testing
-	        em = emf.createEntityManager();
-	        transaction = em.getTransaction();
+			// Re-open the EntityManager for the operation we are testing
+			em = emf.createEntityManager();
+			transaction = em.getTransaction();
 
-	        // Act & Assert
-	        RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
-	            gameMapDAO.removePlayerFromMap(gameId, new Player());
-	        });
+			// Act & Assert
+			RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
+				gameMapDAO.removePlayerFromMap(gameId, new Player());
+			});
 
-	        // Verify that the transaction was rolled back
-	        if (transaction.isActive()) {
-	            transaction.rollback();
-	        }
-	    } finally {
-	        if (em.isOpen()) {
-	            em.close();
-	        }
-	    }
+			// Verify that the transaction was rolled back
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
 	}
-
 
 	@Test
 	void testRemovePlayerFromMap_GameMapNotFound() {

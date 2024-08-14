@@ -14,18 +14,12 @@ import org.hibernate.jpa.HibernatePersistenceProvider;
 
 import com.boracompany.mygame.Model.GameMap;
 import com.boracompany.mygame.Model.Player;
-
 public class HibernateUtil {
 
-    private static final EntityManagerFactory entityManagerFactory;
+    private static EntityManagerFactory entityManagerFactory;
 
-    static {
-        // Load system properties
+    public static void initialize(String dbUrl, String dbUser, String dbPassword) {
         Map<String, Object> properties = new HashMap<>();
-        String dbUrl = System.getProperty("DB_URL");
-        String dbUser = System.getProperty("DB_USERNAME");
-        String dbPassword = System.getProperty("DB_PASSWORD");
-
         if (dbUrl == null || dbUser == null || dbPassword == null) {
             throw new RuntimeException("Database connection properties not set");
         }
@@ -45,6 +39,14 @@ public class HibernateUtil {
         properties.put(AvailableSettings.HBM2DDL_AUTO, "update");
         properties.put(AvailableSettings.SHOW_SQL, "true");
 
+        // HikariCP settings
+        properties.put("hibernate.hikari.connectionTimeout", "20000");
+        properties.put("hibernate.hikari.minimumIdle", "10");
+        properties.put("hibernate.hikari.maximumPoolSize", "20");
+        properties.put("hibernate.hikari.idleTimeout", "300000");
+        properties.put("hibernate.hikari.maxLifetime", "1800000");
+        properties.put("hibernate.hikari.poolName", "MyHikariCP");
+
         entityManagerFactory = new HibernatePersistenceProvider()
                 .createContainerEntityManagerFactory(createPersistenceUnitInfo(), properties);
     }
@@ -58,8 +60,7 @@ public class HibernateUtil {
     }
 
     private static PersistenceUnitInfo createPersistenceUnitInfo() {
-        // Add additional entities here if necessary
-        return new HibernatePersistenceUnitInfo("my-persistence-unit", Player.class,GameMap.class);
+        return new HibernatePersistenceUnitInfo("my-persistence-unit", Player.class, GameMap.class);
     }
 
     private static void createDatabaseIfNotExists(String baseDbUrl, String user, String password, String databaseName) {
@@ -85,3 +86,4 @@ public class HibernateUtil {
         }
     }
 }
+

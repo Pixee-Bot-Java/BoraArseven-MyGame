@@ -32,6 +32,11 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>5.0.1</version> <!-- Use the latest stable version -->
+		</dependency>
 		<!--
 		<dependency>
 			<groupId>org.mongodb</groupId>
@@ -204,7 +209,7 @@
 							<resources>
 								<resource>
 									<directory>src/bdd/resources</directory>
-									<directory>src/it/resources</directory>									
+									<directory>src/it/resources</directory>
 								</resource>
 							</resources>
 						</configuration>
