@@ -285,7 +285,7 @@ since javax.xml.bind has been removed from the JDK -->
 						<excludedClasses>
 							<param>com.boracompany.mygame.IT.*</param> <!--
 							Exclude IT folder -->
-								<param>com.boracompany.mygame.Main.*</param> <!--
+							<param>com.boracompany.mygame.Main.*</param> <!--
 							Exclude Main folder -->
 							<param>com.boracompany.mygame.ORM.*</param><!--
 							Exclude ORM folder, since they are only tested in IT -->
@@ -300,6 +300,7 @@ since javax.xml.bind has been removed from the JDK -->
 							<avoidCallsTo>org.apache.log4j</avoidCallsTo>
 							<avoidCallsTo>org.slf4j</avoidCallsTo>
 							<avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
+							<avoidCallsTo>org.apache.logging.log4j</avoidCallsTo>
 						</avoidCallsTo>
 					</configuration>
 					<executions>
