@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 public class GameController {
 
-	private static final Logger LOGGER = LogManager.getLogger(GameController.class);
+	private static  Logger LOGGER = LogManager.getLogger(GameController.class);
 
 	public void attack(Player attacker, Player defender) {
 		validatePlayers(attacker, defender);
@@ -40,6 +40,7 @@ public class GameController {
 		throw new IllegalArgumentException(message);
 	}
 
+	
 	private void logAttackInitiation(Player attacker, Player defender, float damage, float defenderHealth) {
 		LOGGER.info("Attack initiated: Attacker: {} (Damage: {}), Defender: {} (Health: {})", attacker.getName(),
 				damage, defender.getName(), defenderHealth);
@@ -59,5 +60,11 @@ public class GameController {
 			LOGGER.info("Attack successful: Defender: {} has been defeated (Health: 0, IsAlive: {})",
 					defender.getName(), defender.Isalive());
 		}
+	}
+
+	public Logger getLogger() {
+		// TODO Auto-generated method stub
+		return GameController.LOGGER;
+		
 	}
 }

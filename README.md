@@ -11,4 +11,5 @@ SonarCloud Maintainability Rating: [![Maintainability Rating](https://sonarcloud
 SonarCloud Vulnerabilities: [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)  <br>
 SonarCloud Security Rating: [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)  <br>
 SonarCloud Reliability Rating: [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)  <br>
-SonarCloud Duplicated Lines: [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)<br>
+SonarCloud Duplicated Lines: [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=BoraArseven_MyGame&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=BoraArseven_MyGame)  <br>
+Latest Mutation Testing Reports: https://boraarseven.github.io/MyGame/
