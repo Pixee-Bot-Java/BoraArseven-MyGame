@@ -7,8 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -446,21 +448,211 @@ class TestGameController {
 
 	@Test
 	void testIsAliveCalledCorrectlyWhenDefenderDies() {
-		// Create attacker and defender
+		// Create attacker and defender using the builder
 		Player attacker = builder.resetBuilder().withDamage(100).withName("Attacker").withHealth(100).build();
 		Player defender = builder.resetBuilder().withName("Defender").withHealth(50).build();
 
-		// Spy on the defender object to verify that Isalive() is called
+		// Spy on the defender object to verify that setAlive() and isAlive() are called
 		Player defenderSpy = spy(defender);
 
 		// Call the attack method, which should kill the defender
 		controller.attack(attacker, defenderSpy);
 
-		// Verify that the Isalive() method is called during the attack (inside
-		// updateDefenderHealth)
+		// Verify that setAlive(false) was called
+		verify(defenderSpy).setAlive(false);
+
+		// Optionally, check the alive status after the attack
+		assertFalse(defenderSpy.Isalive());
+
+	}
+
+	@Test
+	void testDefenderHealthReducedToZero() {
+		// Create attacker and defender using the builder
+		Player attacker = builder.resetBuilder().withDamage(100).withName("Attacker").withHealth(100).build();
+		Player defender = builder.resetBuilder().withName("Defender").withHealth(50).build();
+
+		// Spy on the defender object to verify method calls
+		Player defenderSpy = spy(defender);
+
+		// Create the GameController
+		GameController controller = new GameController();
+
+		// Perform the attack
+		controller.attack(attacker, defenderSpy);
+
+		// Verify the method invocation order
 		InOrder inOrder = Mockito.inOrder(defenderSpy);
+
+		// First, setAlive(false) should be called
 		inOrder.verify(defenderSpy).setAlive(false);
+
+		// After that, isAlive() should be called
 		inOrder.verify(defenderSpy).Isalive();
+
+		// Verify that the defender's health is correctly set to 0
+		assertEquals(0, defenderSpy.getHealth(), 0.0);
+	}
+
+	@Test
+	void testDefenderHealthReducedBelowZero() {
+		// Create attacker and defender using the builder
+		Player attacker = builder.resetBuilder().withDamage(100).withName("Attacker").withHealth(100).build();
+		Player defender = builder.resetBuilder().withName("Defender").withHealth(50).build();
+
+		// Spy on the defender object to verify method calls
+		Player defenderSpy = spy(defender);
+
+		// Create the GameController
+		GameController controller = new GameController();
+
+		// Perform the attack
+		controller.attack(attacker, defenderSpy);
+
+		// Verify that the defender's health is correctly set to 0
+		assertEquals(0, defenderSpy.getHealth(), 0.0);
+
+		// Verify that setAlive(false) was called once
+		verify(defenderSpy, times(1)).setAlive(false);
+
+		// Verify that isAlive() was called exactly once
+		verify(defenderSpy, times(1)).Isalive();
+	}
+
+	@Test
+	void testDefenderHealthReducedToZeroAndBelow() {
+		// Create attacker and defender using the builder
+		Player attacker = builder.resetBuilder().withDamage(50).withName("Attacker").withHealth(100).build();
+		Player defender = builder.resetBuilder().withName("Defender").withHealth(50).build();
+
+		// Spy on the defender object to verify method calls
+		Player defenderSpy = spy(defender);
+
+		// Create the GameController
+		GameController controller = new GameController();
+
+		// Perform the attack which should reduce health to zero
+		controller.attack(attacker, defenderSpy);
+
+		// Verify that the defender's health is exactly 0
+		assertEquals(0, defenderSpy.getHealth(), 0.0);
+
+		// Verify that setAlive(false) was called exactly once
+		verify(defenderSpy, times(1)).setAlive(false);
+
+		// Verify that isAlive() was called exactly once
+		verify(defenderSpy, times(1)).Isalive();
+
+		// Now perform an overkill attack to ensure health does not go negative
+		attacker.setDamage(100);
+		controller.attack(attacker, defenderSpy);
+
+		// Ensure health is still 0 and isAlive() is still false
+		assertEquals(0, defenderSpy.getHealth(), 0.0);
+		assertFalse(defenderSpy.Isalive());
+	}
+
+	@Test
+	void testLoggingWhenDefenderDefeated() {
+		// Create attacker and defender using the builder
+		Player attacker = builder.resetBuilder().withDamage(100).withName("Attacker").withHealth(100).build();
+		Player defender = builder.resetBuilder().withName("Defender").withHealth(50).build();
+
+		// Run the attack method
+		controllerSpy.attack(attacker, defender);
+
+		// Verify that the correct logging occurred
+		verify(logger).info(eq("Attack successful: Defender: {} has been defeated (Health: 0, IsAlive: {})"),
+				eq("Defender"), eq(false));
+	}
+
+	@Test
+	void testHealthExactlyAtZeroAfterAttack() {
+		Player attacker = builder.resetBuilder().withDamage(50).withName("Attacker").withHealth(100).build();
+		Player defender = builder.resetBuilder().withName("Defender").withHealth(50).build();
+
+		// Spy on the defender object to verify method calls
+		Player defenderSpy = spy(defender);
+
+		// Perform the attack
+		controller.attack(attacker, defenderSpy);
+
+		// Verify the method invocation order using InOrder
+		InOrder inOrder = Mockito.inOrder(defenderSpy);
+
+		// First, setAlive(false) should be called
+		inOrder.verify(defenderSpy).setAlive(false);
+
+		// After that, isAlive() should be called
+		inOrder.verify(defenderSpy).Isalive();
+
+		// Verify that the defender's health is correctly set to 0
+		assertEquals(0, defenderSpy.getHealth(), 0.0);
+	}
+
+	@Test
+	void testOverkillAttack() {
+		// Create attacker with overkill damage
+		Player attacker = builder.resetBuilder().withDamage(200).withName("Attacker").withHealth(100).build();
+		Player defender = builder.resetBuilder().withName("Defender").withHealth(50).build();
+
+		// Perform the attack
+		controller.attack(attacker, defender);
+
+		// Ensure defender's health is 0 and they are dead
+		assertEquals(0, defender.getHealth());
+		assertFalse(defender.Isalive());
+	}
+
+	@Test
+	void testDefenderHealthExactlyOne() {
+		// Create attacker and defender using the builder
+		Player attacker = builder.resetBuilder().withDamage(49).withName("Attacker").withHealth(100).build();
+		Player defender = builder.resetBuilder().withName("Defender").withHealth(50).build();
+
+		// Spy on the defender object to verify method calls
+		Player defenderSpy = spy(defender);
+
+		// Perform the attack which should reduce health to exactly 1
+		controller.attack(attacker, defenderSpy);
+
+		// Verify that the defender's health is exactly 1 and not considered defeated
+		assertEquals(1, defenderSpy.getHealth(), 0.0);
+
+		// Ensure defender is still alive
+		assertTrue(defenderSpy.Isalive());
+
+		// Verify that setAlive(false) was never called because defender is still alive
+		verify(defenderSpy, times(0)).setAlive(false);
+
+		// Ensure correct logging for the attack with health remaining
+		verify(logger).info(eq("Attack successful: Defender: {}'s new health: {}"), eq("Defender"), eq(1f));
+	}
+
+	@Test
+	void testDefenderHealthReducesToZeroFromOne() {
+		// Create attacker and defender using the builder
+		Player attacker = builder.resetBuilder().withDamage(1).withName("Attacker").withHealth(100).build();
+		Player defender = builder.resetBuilder().withName("Defender").withHealth(1).build();
+
+		// Spy on the defender object to verify method calls
+		Player defenderSpy = spy(defender);
+
+		// Perform the attack which should reduce health to exactly 0
+		controller.attack(attacker, defenderSpy);
+
+		// Verify that the defender's health is exactly 0
+		assertEquals(0, defenderSpy.getHealth(), 0.0);
+
+		// Ensure defender is marked as dead
+		assertFalse(defenderSpy.Isalive());
+
+		// Verify that setAlive(false) was called because defender is dead
+		verify(defenderSpy, times(1)).setAlive(false);
+
+		// Ensure correct logging for the attack resulting in death
+		verify(logger).info(eq("Attack successful: Defender: {} has been defeated (Health: 0, IsAlive: {})"),
+				eq("Defender"), eq(false));
 	}
 
 }
