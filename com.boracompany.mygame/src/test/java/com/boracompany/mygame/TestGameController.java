@@ -1,15 +1,23 @@
 package com.boracompany.mygame;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import java.lang.reflect.Field;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import com.boracompany.mygame.Controller.GameController;
 import com.boracompany.mygame.Model.Player;
@@ -20,10 +28,26 @@ class TestGameController {
 	GameController controller;
 	PlayerBuilder builder;
 
+	private Logger logger;
+	private GameController controllerSpy;
+
 	@BeforeEach
-	void Setup() {
+	void Setup() throws Exception {
 		controller = new GameController();
 		builder = new PlayerBuilder(); // Initialize the builder once
+
+		// Mock the Logger
+		logger = mock(Logger.class);
+
+		// Spy on the GameController
+		controllerSpy = spy(new GameController());
+
+		// Use reflection to replace the static final LOGGER with our mock
+		Field loggerField = GameController.class.getDeclaredField("LOGGER");
+		loggerField.setAccessible(true);
+
+		// Replace the static logger instance with the mock logger
+		loggerField.set(null, logger);
 	}
 
 	@Test
@@ -37,7 +61,6 @@ class TestGameController {
 		assertEquals("Attacker or defender is null.", exception.getMessage());
 	}
 
-	
 	@Test
 	void testwhenAttackingAttackingPLayerisNullThrowsException() {
 		Player attacker = null;
@@ -258,9 +281,7 @@ class TestGameController {
 		Player attacker = mock(Player.class);
 		Player defender = mock(Player.class);
 
-
 		when(attacker.getDamage()).thenReturn(10.0f);
-
 
 		controller.attack(attacker, defender);
 	}
@@ -313,5 +334,75 @@ class TestGameController {
 			controller.attack(attacker, mock(Player.class));
 		});
 		assertTrue(exception.getMessage().contains("Damage should be positive"));
+	}
+
+	@Test
+	void testAttackSuccess() {
+		// Create Players using the builder pattern
+		Player attacker = new PlayerBuilder().resetBuilder().withName("Attacker").withDamage(100).withIsAlive(true)
+				.build();
+		Player defender = new PlayerBuilder().resetBuilder().withName("Defender").withDamage(50).withIsAlive(true)
+				.withHealth(150).build();
+
+		// Run the attack method
+		controllerSpy.attack(attacker, defender);
+
+		// Verify that the public behavior of the GameController is correct
+		assertEquals(50, defender.getHealth());
+		assertTrue(defender.Isalive());
+
+		// Verify that logging occurred with the correct messages
+		verify(logger).info(anyString(), eq("Attacker"), eq(100f), eq("Defender"), eq(150f));
+		verify(logger).info(anyString(), eq("Defender"), eq(50f));
+	}
+
+	@Test
+	void testAttackWithZeroDamageThrowsException() {
+		// Create Players using the builder pattern
+		Player attacker = new PlayerBuilder().resetBuilder().withName("Attacker").withDamage(0).withIsAlive(true)
+				.build();
+		Player defender = new PlayerBuilder().resetBuilder().withName("Defender").withDamage(50).withIsAlive(true)
+				.withHealth(150).build();
+
+		// Test that the exception is thrown when damage is zero
+		assertThrows(IllegalArgumentException.class, () -> controllerSpy.attack(attacker, defender));
+
+		// Verify that the error logging occurred with the correct message
+		verify(logger).error("Attack failed: Damage should be positive");
+	}
+
+	@Test
+	void testNullPlayerThrowsException() {
+		// Create Players with one null player
+		Player attacker = null;
+		Player defender = new PlayerBuilder().resetBuilder().withName("Defender").withDamage(50).withIsAlive(true)
+				.withHealth(150).build();
+
+		// Test that the exception is thrown when attacker is null
+		assertThrows(IllegalArgumentException.class, () -> controllerSpy.attack(attacker, defender));
+
+		// Verify that the error logging occurred with the correct message
+		verify(logger).error("Attack failed: Attacker or defender is null.");
+	}
+
+	@Test
+	void testDefenderDefeated() {
+		// Create Players using the builder pattern
+		Player attacker = new PlayerBuilder().resetBuilder().withName("Attacker").withDamage(200).withIsAlive(true)
+				.build();
+		Player defender = new PlayerBuilder().resetBuilder().withName("Defender").withDamage(50).withIsAlive(true)
+				.withHealth(150).build();
+
+		// Run the attack method
+		controllerSpy.attack(attacker, defender);
+
+		// Verify the defender's health and alive status
+		assertEquals(0, defender.getHealth());
+		assertFalse(defender.Isalive());
+
+		// Verify that the correct logging occurred
+		verify(logger).info(eq("Attack successful: Defender: {} has been defeated (Health: 0, IsAlive: {})"),
+				eq("Defender"), eq(false));
+
 	}
 }
