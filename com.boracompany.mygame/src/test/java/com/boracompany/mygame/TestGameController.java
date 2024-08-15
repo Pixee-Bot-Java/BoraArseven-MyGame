@@ -6,18 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import java.lang.reflect.Field;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import com.boracompany.mygame.Controller.GameController;
 import com.boracompany.mygame.Model.Player;
@@ -69,7 +68,7 @@ class TestGameController {
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			controller.attack(attacker, defender);
 		});
-
+		assertEquals("Attacker or defender is null.", exception.getMessage());
 	}
 
 	@Test
