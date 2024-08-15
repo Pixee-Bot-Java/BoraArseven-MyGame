@@ -30,8 +30,12 @@ import com.boracompany.mygame.Model.PlayerBuilder;
 public class PlayerDAOImpIT {
 
 	@Container
-	public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13.3")
+	public static PostgreSQLContainer<?> postgreSQLContainer = extracted()
 			.withDatabaseName("test").withUsername("test").withPassword("test");
+
+	private static PostgreSQLContainer<?> extracted() {
+		return new PostgreSQLContainer<>("postgres:13.3");
+	}
 
 	private EntityManagerFactory emf;
 	private PlayerDAOIMPL playerDAO;
