@@ -1,6 +1,7 @@
 package com.boracompany.mygame;
 
 import static org.junit.Assert.assertFalse;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -17,6 +18,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
 import com.boracompany.mygame.Controller.GameController;
 import com.boracompany.mygame.Model.Player;
@@ -415,8 +418,6 @@ class TestGameController {
 		assertEquals(99, defender.getHealth()); // Ensure damage is reduced by 1
 	}
 
-
-
 	@Test
 	void testUpdateDefenderHealthCallsSetAlive() {
 		Player attacker = builder.resetBuilder().withDamage(100).build();
@@ -427,6 +428,39 @@ class TestGameController {
 		assertEquals(0, defender.getHealth()); // Ensure defender's health is 0
 		verify(defender).setAlive(false); // Verify setAlive(false) is called
 		assertFalse(defender.Isalive()); // Ensure defender is not alive
+	}
+
+	@Test
+	void testDefenderHealthIsNotSetTo1WhenHealthIsZero() {
+		// Create attacker and defender
+		Player attacker = builder.resetBuilder().withDamage(50).withName("Attacker").withHealth(100).build();
+		Player defender = builder.resetBuilder().withName("Defender").withHealth(50).build();
+
+		// Call the attack method, which should reduce defender's health to exactly 0
+		controller.attack(attacker, defender);
+
+		// Assert that the defender's health is exactly 0, not 1
+		assertEquals(0, defender.getHealth());
+		assertFalse(defender.Isalive()); // Ensure defender is dead
+	}
+
+	@Test
+	void testIsAliveCalledCorrectlyWhenDefenderDies() {
+		// Create attacker and defender
+		Player attacker = builder.resetBuilder().withDamage(100).withName("Attacker").withHealth(100).build();
+		Player defender = builder.resetBuilder().withName("Defender").withHealth(50).build();
+
+		// Spy on the defender object to verify that Isalive() is called
+		Player defenderSpy = spy(defender);
+
+		// Call the attack method, which should kill the defender
+		controller.attack(attacker, defenderSpy);
+
+		// Verify that the Isalive() method is called during the attack (inside
+		// updateDefenderHealth)
+		InOrder inOrder = Mockito.inOrder(defenderSpy);
+		inOrder.verify(defenderSpy).setAlive(false);
+		inOrder.verify(defenderSpy).Isalive();
 	}
 
 }
