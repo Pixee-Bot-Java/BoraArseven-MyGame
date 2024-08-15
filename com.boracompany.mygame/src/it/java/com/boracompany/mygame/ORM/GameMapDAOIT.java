@@ -734,5 +734,6 @@ public class GameMapDAOIT {
 		// Verify that the EntityManager is closed after the operation
 		Mockito.verify(emSpy).close();
 	}
+	
 
 }
