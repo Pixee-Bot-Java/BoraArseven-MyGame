@@ -37,6 +37,7 @@ class TestGameController {
 		assertEquals("Attacker or defender is null.", exception.getMessage());
 	}
 
+	
 	@Test
 	void testwhenAttackingAttackingPLayerisNullThrowsException() {
 		Player attacker = null;
