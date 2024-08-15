@@ -62,9 +62,5 @@ public class GameController {
 		}
 	}
 
-	public Logger getLogger() {
-		// TODO Auto-generated method stub
-		return GameController.LOGGER;
-		
-	}
+
 }

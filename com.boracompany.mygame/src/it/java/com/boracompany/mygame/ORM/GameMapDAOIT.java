@@ -32,8 +32,12 @@ public class GameMapDAOIT {
 	private static final Logger LOGGER = LogManager.getLogger(GameMapDAOIT.class);
 
 	@Container
-	public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13.3")
+	public static PostgreSQLContainer<?> postgreSQLContainer = extracted()
 			.withDatabaseName("test").withUsername("test").withPassword("test");
+
+	private static PostgreSQLContainer<?> extracted() {
+		return new PostgreSQLContainer<>("postgres:13.3");
+	}
 
 	private EntityManagerFactory emf;
 	private GameMapDAO gameMapDAO;
@@ -384,7 +388,7 @@ public class GameMapDAOIT {
 				.remove(Mockito.any(GameMap.class));
 
 		// Use the spied EntityManagerFactory in the DAO
-		GameMapDAO gameMapDAO = new GameMapDAO(spyEmf);
+		GameMapDAO GameMapDAOwithSpiedEmf = new GameMapDAO(spyEmf);
 
 		// Ensure the transaction is active before the exception occurs
 		Mockito.when(spyTransaction.isActive()).thenReturn(true);
@@ -392,7 +396,7 @@ public class GameMapDAOIT {
 		// Verify that the delete method throws a RuntimeException due to the simulated
 		// PersistenceException
 		RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
-			gameMapDAO.delete(1L);
+			GameMapDAOwithSpiedEmf.delete(1L);
 		});
 
 		// Assert that the transaction was rolled back
@@ -574,8 +578,7 @@ public class GameMapDAOIT {
 			em = emf.createEntityManager();
 			transaction = em.getTransaction();
 
-			// Act & Assert
-			RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
+			assertThrows(RuntimeException.class, () -> {
 				gameMapDAO.removePlayerFromMap(gameId, new Player());
 			});
 
@@ -607,8 +610,7 @@ public class GameMapDAOIT {
 		// Simulate GameMap not being found
 		Mockito.doReturn(null).when(emSpy).find(GameMap.class, 1L);
 
-		// Act & Assert
-		RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
+		assertThrows(RuntimeException.class, () -> {
 			gameMapDAO.removePlayerFromMap(1L, new Player());
 		});
 
@@ -645,8 +647,7 @@ public class GameMapDAOIT {
 		Mockito.doReturn(spyTransaction).when(emspy).getTransaction();
 		Mockito.when(spyTransaction.isActive()).thenReturn(true);
 
-		// Act & Assert
-		RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
+		assertThrows(RuntimeException.class, () -> {
 			gameMapDAO.removePlayerFromMap(gameMap.getId(), new Player());
 		});
 
@@ -694,8 +695,7 @@ public class GameMapDAOIT {
 		Mockito.doReturn(transactionSpy).when(emSpy).getTransaction();
 		Mockito.when(transactionSpy.isActive()).thenReturn(true);
 
-		// Act & Assert
-		RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
+		assertThrows(RuntimeException.class, () -> {
 			gameMapDAO.removePlayerFromMap(gameMap.getId(), player);
 		});
 
@@ -724,8 +724,7 @@ public class GameMapDAOIT {
 		Mockito.doReturn(null).when(emSpy).find(GameMap.class, 1L);
 		Mockito.doReturn(null).when(emSpy).find(Player.class, 1L);
 
-		// Act & Assert
-		RuntimeException thrownException = assertThrows(RuntimeException.class, () -> {
+		assertThrows(RuntimeException.class, () -> {
 			gameMapDAO.removePlayerFromMap(1L, new Player());
 		});
 

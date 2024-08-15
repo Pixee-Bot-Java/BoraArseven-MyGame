@@ -404,4 +404,29 @@ class TestGameController {
 				eq("Defender"), eq(false));
 
 	}
+
+	@Test
+	void testCalculateDamageWithPositiveValueAndZeroSubstitution() {
+		Player attacker = builder.resetBuilder().withDamage(1).build();
+		Player defender = builder.resetBuilder().withHealth(100).build();
+
+		controller.attack(attacker, defender);
+
+		assertEquals(99, defender.getHealth()); // Ensure damage is reduced by 1
+	}
+
+
+
+	@Test
+	void testUpdateDefenderHealthCallsSetAlive() {
+		Player attacker = builder.resetBuilder().withDamage(100).build();
+		Player defender = spy(builder.resetBuilder().withHealth(50).withIsAlive(true).build());
+
+		controller.attack(attacker, defender);
+
+		assertEquals(0, defender.getHealth()); // Ensure defender's health is 0
+		verify(defender).setAlive(false); // Verify setAlive(false) is called
+		assertFalse(defender.Isalive()); // Ensure defender is not alive
+	}
+
 }
