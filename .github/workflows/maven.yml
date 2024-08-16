@@ -9,33 +9,37 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: 17
-    - name: Cache local Maven repository
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven
-    - name: Build with Maven
-      run: mvn clean verify -Pjacoco -DrepoToken=${{ secrets.COVERALLS_REPO_TOKEN }} coveralls:report
-      working-directory: com.boracompany.mygame
-    - name: Generate JUnit Report
-      run: >
-         mvn -f com.boracompany.mygame/pom.xml
-         surefire-report:report-only site:site -DgenerateReports=false
-      if: ${{ always() }}
-    - name: Archive JUnit Report
-      uses: actions/upload-artifact@v4
-      if: ${{ always() }}
-      with:
-        name: surefire-report-jdk-17
-        path: '**/target/site'
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven
+
+      - name: Build with Maven and Generate Coverage
+        run: mvn clean verify jacoco:report coveralls:report
+        env: 
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+
+      - name: Generate JUnit Report
+        run: mvn surefire-report:report-only site:site -DgenerateReports=false
+        working-directory: com.boracompany.mygame
+        if: ${{ always() }}
+
+      - name: Archive JUnit Report
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: surefire-report-jdk-17
+          path: '**/target/site'
