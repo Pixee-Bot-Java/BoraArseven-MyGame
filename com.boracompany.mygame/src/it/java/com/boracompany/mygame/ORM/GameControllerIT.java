@@ -77,6 +77,7 @@ class GameControllerIT {
 		resetDatabase();
 	}
 
+	
 	@AfterAll
 	static void tearDownAll() {
 		HibernateUtil.close();

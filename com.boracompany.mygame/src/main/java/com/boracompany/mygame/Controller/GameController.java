@@ -101,6 +101,7 @@ public class GameController {
 	private float calculateNewHealth(float defenderHealth, float damage) {
 		return defenderHealth - damage;
 	}
+	
 
 	private void updateDefenderHealth(Player defender, float newHealth) {
 		if (newHealth > 0) {
