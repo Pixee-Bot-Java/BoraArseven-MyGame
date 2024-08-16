@@ -1,6 +1,8 @@
 package com.boracompany.mygame.Model;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,10 +15,10 @@ public class GameMap {
 
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "map_id") // Foreign key in Player table to link back to the Map
-    private List<Player> players;
-
+    private List<Player> players = new ArrayList<>();
+ 
     // Constructors
     public GameMap() {}
 
