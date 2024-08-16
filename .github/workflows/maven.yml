@@ -28,12 +28,12 @@ jobs:
             ${{ runner.os }}-maven
 
       - name: Build with Maven and Generate Coverage
-        run: mvn clean verify jacoco:report coveralls:report
+        run: mvn -f com.boracompany.mygame/pom.xml clean verify jacoco:report coveralls:report
         env: 
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
       - name: Generate JUnit Report
-        run: mvn surefire-report:report-only site:site -DgenerateReports=false
+        run: mvn -f com.boracompany.mygame/pom.xml surefire-report:report-only site:site -DgenerateReports=false
         working-directory: com.boracompany.mygame
         if: ${{ always() }}
 
