@@ -2,6 +2,7 @@ package com.boracompany.mygame.ORM;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -74,8 +75,9 @@ public class HibernateUtil {
     }
 
     private static boolean databaseExists(Connection conn, String databaseName) throws SQLException {
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute("SELECT 1 FROM pg_database WHERE datname = '" + databaseName + "'");
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT 1 FROM pg_database WHERE datname = ?")) {
+            stmt.setString(1, databaseName);
+            stmt.execute();
             return stmt.getResultSet().next();
         }
     }
